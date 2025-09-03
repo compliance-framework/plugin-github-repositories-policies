@@ -1,7 +1,6 @@
-# Template for policies for use in the Github Settings plugin
+# Policies for use in the Github Repositories plugin
 
 ## Testing
-
 
 ```shell
 opa test policies
@@ -9,17 +8,12 @@ opa test policies
 
 ## Bundling
 
-Policies are built into bundle to make distribution easier. 
+Policies are built into bundle to make distribution easier.
 
-You can easily build the policies by running 
+You can easily build the policies by running
+
 ```shell
 make build
-```
-
-## Running policies locally
-
-```shell
-cat example-data/testorg-unremediated.json | opa eval -I -b policies -f pretty data.compliance_framework
 ```
 
 ## Writing policies.
@@ -27,45 +21,12 @@ cat example-data/testorg-unremediated.json | opa eval -I -b policies -f pretty d
 Policies are written in the [Rego](https://www.openpolicyagent.org/docs/latest/policy-language/) language.
 
 ```rego
-package compliance-framework.mfa_enabled
+package compliance-framework.license_agpl_v3
 
 violation[] {
-	input.organization.two_factor_requirement_enabled == false
+	input.settings.license.spdx_id != "AGPL-3.0"
 }
 
-title := "Two Factor Authentication is required at an organization level"
-description := "Two factor authentication should be enabled and enforced for all users within the Github Organization to make it harder for malicious actors to gain access to the organizations settings and repositories & settings"
-remarks := "More information from Github can be found here: https://docs.github.com/en/organizations/keeping-your-organization-secure/managing-two-factor-authentication-for-your-organization/requiring-two-factor-authentication-in-your-organization"
-
-controls := [
-    {
-        "class": "SAMA_CSF_1.0",
-        "control-id": "3.3.5", 
-        "statement-ids": [
-            "4.e",
-            "f.1.a",
-        ]
-    },
-]
-```
-
-## Metadata
-
-Plugins expect policies to contain a metadata section as comments, with a `# METADATA` line to indicate it. This metadata should be in a YAML format, and contain a title and description of the policy. Other configuration can be set also, like the schedule that a policy should run on, or the control that it is linked to.
-
-Any other comments can be added as normal (before and after) with a line separator between them and the metadata.
-
-Here is an example metadata:
-```opa
-# your custom comment
-
-# METADATA
-# title: <your-title>
-# description: <your-description>
-# custom:
-#   controls:
-#     - <control-id>
-#   schedule: "<cron-string>"
-
-# your custom comment
+title := "Repository is licenced with AGPL v3.0"
+description := "Licensing your open source software is essential to clearly communicate the terms under which others can use, modify, and distribute your code. It helps protect your rights as an author, ensures compliance with legal requirements, and fosters trust and collaboration within the open source community. A well-defined license also prevents misuse and clarifies responsibilities for contributors and users."
 ```
