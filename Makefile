@@ -36,4 +36,3 @@ clean: # Cleanup build artifacts
 build: clean ## Build the policy bundle
 	@mkdir -p dist/
 	@opa build -b policies -o dist/bundle.tar.gz
-

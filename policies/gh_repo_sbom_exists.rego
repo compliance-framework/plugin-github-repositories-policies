@@ -1,0 +1,19 @@
+package compliance_framework.sbom_exists
+
+sbom := input.sbom.sbom
+
+violation[{}] if {
+    sbom == null
+}
+
+violation[{}] if {
+    sbom != null
+    not sbom_has_packages
+}
+
+sbom_has_packages if {
+    count(sbom.packages) > 0
+}
+
+title := "Repository SBOM exists"
+description := "A repository must include an SPDX SBOM with at least one package. Expected shape: input.sbom.sbom.packages[]."
