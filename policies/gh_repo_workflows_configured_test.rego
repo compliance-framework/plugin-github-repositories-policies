@@ -5,8 +5,9 @@ import data.compliance_framework.workflows_configured as policy
 test_no_workflows_two_violations if {
   inp := {"workflows": []}
 
-  # Both rules trigger: empty list and vacuous every{}
-  count(policy.violation) with input as inp == 2
+  # Multiple rules may be true but violations set de-duplicates identical objects.
+  v := count(policy.violation) with input as inp
+  v == 1
 }
 
 test_contains_build_ok if {
@@ -14,7 +15,8 @@ test_contains_build_ok if {
     {"name": "Build and Test"}
   ]}
 
-  count(policy.violation) with input as inp == 0
+  v := count(policy.violation) with input as inp
+  v == 0
 }
 
 test_no_build_violation if {
@@ -23,7 +25,8 @@ test_no_build_violation if {
     {"name": "Deploy"}
   ]}
 
-  count(policy.violation) with input as inp == 1
+  v := count(policy.violation) with input as inp
+  v == 1
 }
 
 test_missing_name_no_violation if {
@@ -33,5 +36,6 @@ test_missing_name_no_violation if {
     {"id": "abc"}
   ]}
 
-  count(policy.violation) with input as inp == 0
+  v := count(policy.violation) with input as inp
+  v == 0
 }

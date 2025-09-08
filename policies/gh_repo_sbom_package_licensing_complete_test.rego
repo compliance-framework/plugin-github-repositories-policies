@@ -8,7 +8,8 @@ test_missing_license_detected_violation if {
     {"name": "b", "licenseConcluded": "NOASSERTION"},
     {"name": "c", "licenseConcluded": "MIT"}
   ]}}}
-  count(policy.violation) with input as inp == 1
+  v := count(policy.violation) with input as inp
+  v == 1
 }
 
 test_all_packages_have_license_ok if {
@@ -16,6 +17,6 @@ test_all_packages_have_license_ok if {
     {"name": "a", "licenseConcluded": "MIT"},
     {"name": "b", "licenseConcluded": "Apache-2.0"}
   ]}}}
-  count(policy.violation) with input as inp == 0
+  v := count(policy.violation) with input as inp
+  v == 0
 }
-

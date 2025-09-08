@@ -5,7 +5,8 @@ import data.compliance_framework.workflow_health as policy
 test_no_runs_ok if {
   inp := {"workflow_runs": []}
 
-  count(policy.violation) with input as inp == 0
+  v := count(policy.violation) with input as inp
+  v == 0
 }
 
 test_within_tolerance_ok if {
@@ -23,7 +24,8 @@ test_within_tolerance_ok if {
   ]}
 
   # 8/10 pass; 20% tolerance -> exactly at threshold => no violation
-  count(policy.violation) with input as inp == 0
+  v := count(policy.violation) with input as inp
+  v == 0
 }
 
 test_exceeds_tolerance_violation if {
@@ -41,7 +43,8 @@ test_exceeds_tolerance_violation if {
   ]}
 
   # 6/10 pass; 20% tolerance -> abs(10-6)=4 > 2 => violation
-  count(policy.violation) with input as inp == 1
+  v := count(policy.violation) with input as inp
+  v == 1
 }
 
 test_small_set_within_tolerance_ok if {
@@ -54,7 +57,8 @@ test_small_set_within_tolerance_ok if {
   ]}
 
   # 4/5 pass; 20% of 5 is 1; abs(5-4)=1 -> not greater => ok
-  count(policy.violation) with input as inp == 0
+  v := count(policy.violation) with input as inp
+  v == 0
 }
 
 test_small_set_exceeds_tolerance_violation if {
@@ -67,7 +71,8 @@ test_small_set_exceeds_tolerance_violation if {
   ]}
 
   # 3/5 pass; abs=2 > 1 -> violation
-  count(policy.violation) with input as inp == 1
+  v := count(policy.violation) with input as inp
+  v == 1
 }
 
 test_description_includes_counts if {

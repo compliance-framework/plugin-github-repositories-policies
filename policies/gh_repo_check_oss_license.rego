@@ -27,6 +27,15 @@ violation[{}] if {
     ]
 }
 
+violation[{}] if {
+    # spdx_id missing
+    not input.settings.license.spdx_id
+}
+violation[{}] if {
+    # spdx_id empty string
+    input.settings.license.spdx_id == ""
+}
+
 title = "Repository has a valid Open Source License"
 description = "All repositories must have a valid Open Source License."
 remarks = "Licensing your open source software is essential to clearly communicate the terms under which others can use, modify, and distribute your code. It helps protect your rights as an author, ensures compliance with legal requirements, and fosters trust and collaboration within the open source community. A well-defined license also prevents misuse and clarifies responsibilities for contributors and users."

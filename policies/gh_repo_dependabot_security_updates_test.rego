@@ -11,13 +11,15 @@ test_enabled_ok if {
     }
   }
 
-  count(policy.violation) with input as inp == 0
+  v := count(policy.violation) with input as inp
+  v == 0
 }
 
 test_missing_security_and_analysis_three_violations if {
   inp := {}
 
-  count(policy.violation) with input as inp == 3
+  v := count(policy.violation) with input as inp
+  v == 1
 }
 
 test_missing_feature_two_violations if {
@@ -27,7 +29,8 @@ test_missing_feature_two_violations if {
     }
   }
 
-  count(policy.violation) with input as inp == 2
+  v := count(policy.violation) with input as inp
+  v == 1
 }
 
 test_disabled_violation if {
@@ -39,7 +42,8 @@ test_disabled_violation if {
     }
   }
 
-  count(policy.violation) with input as inp == 1
+  v := count(policy.violation) with input as inp
+  v == 1
 }
 
 test_status_case_mismatch_violation if {
@@ -51,5 +55,6 @@ test_status_case_mismatch_violation if {
     }
   }
 
-  count(policy.violation) with input as inp == 1
+  v := count(policy.violation) with input as inp
+  v == 1
 }

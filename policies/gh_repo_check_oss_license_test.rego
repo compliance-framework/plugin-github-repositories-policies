@@ -9,7 +9,8 @@ test_valid_license_ok if {
     }
   }
 
-  count(policy.violation) with input as inp == 0
+  v := count(policy.violation) with input as inp
+  v == 0
 }
 
 test_invalid_license_violation if {
@@ -19,7 +20,8 @@ test_invalid_license_violation if {
     }
   }
 
-  count(policy.violation) with input as inp == 1
+  v := count(policy.violation) with input as inp
+  v == 1
 }
 
 test_missing_spdx_violation if {
@@ -29,7 +31,8 @@ test_missing_spdx_violation if {
     }
   }
 
-  count(policy.violation) with input as inp == 1
+  v := count(policy.violation) with input as inp
+  v == 1
 }
 
 test_case_mismatch_violation if {
@@ -39,5 +42,6 @@ test_case_mismatch_violation if {
     }
   }
 
-  count(policy.violation) with input as inp == 1
+  v := count(policy.violation) with input as inp
+  v == 1
 }

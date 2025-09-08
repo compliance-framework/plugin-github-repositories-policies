@@ -3,12 +3,16 @@ package compliance_framework.sbom_exists
 sbom := input.sbom.sbom
 
 violation[{}] if {
-    sbom == null
+    not sbom_present
 }
 
 violation[{}] if {
-    sbom != null
+    sbom_present
     not sbom_has_packages
+}
+
+sbom_present if {
+    input.sbom.sbom != null
 }
 
 sbom_has_packages if {

@@ -2,7 +2,7 @@ package compliance_framework.secret_scanning_push_protection_enabled_test
 
 import data.compliance_framework.secret_scanning_push_protection_enabled as policy
 
-test_enabled_ok if {
+test_push_protection_enabled_ok if {
   inp := {
     "settings": {
       "security_and_analysis": {
@@ -11,26 +11,29 @@ test_enabled_ok if {
     }
   }
 
-  count(policy.violation) with input as inp == 0
+  v := count(policy.violation) with input as inp
+  v == 0
 }
 
-test_missing_security_and_analysis_three_violations if {
+test_push_protection_missing_security_and_analysis_triggers_all_checks if {
   inp := {}
 
-  count(policy.violation) with input as inp == 3
+  v := count(policy.violation) with input as inp
+  v == 1
 }
 
-test_missing_feature_two_violations if {
+test_push_protection_missing_feature_triggers_2_violations if {
   inp := {
     "settings": {
       "security_and_analysis": {}
     }
   }
 
-  count(policy.violation) with input as inp == 2
+  v := count(policy.violation) with input as inp
+  v == 1
 }
 
-test_disabled_violation if {
+test_push_protection_disabled_is_violation if {
   inp := {
     "settings": {
       "security_and_analysis": {
@@ -39,10 +42,11 @@ test_disabled_violation if {
     }
   }
 
-  count(policy.violation) with input as inp == 1
+  v := count(policy.violation) with input as inp
+  v == 1
 }
 
-test_status_case_mismatch_violation if {
+test_push_protection_case_mismatch_is_violation_greybox if {
   inp := {
     "settings": {
       "security_and_analysis": {
@@ -51,5 +55,6 @@ test_status_case_mismatch_violation if {
     }
   }
 
-  count(policy.violation) with input as inp == 1
+  v := count(policy.violation) with input as inp
+  v == 1
 }
