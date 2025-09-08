@@ -18,6 +18,10 @@ test_has_banned_violation if {
   ]}}}
   v := count(policy.violation) with input as inp
   v == 1
+
+  # Description should include offending package and license expression
+  desc := policy.description with input as inp
+  contains(desc, "a (BUSL-1.1")
 }
 
 test_sspl_banned_violation if {
