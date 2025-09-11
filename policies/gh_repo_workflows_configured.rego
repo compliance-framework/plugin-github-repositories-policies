@@ -7,6 +7,7 @@ violation[{}] if {
 violation[{}] if {
 	every workflow in input.workflows {
 		not contains(lower(workflow.name), "build")
+		not contains(lower(workflow.name), "ci")
 	}
 }
 
