@@ -15,7 +15,7 @@ test_recent_pr_ok if {
 test_old_pr_violation if {
 	now := time.parse_rfc3339_ns("2025-06-10T10:00:00Z")
 	inp := {"pull_requests": [{
-		"created_at": "2025-06-03T9:00:00Z",
+		"created_at": "2025-06-03T09:00:00Z",
 		"user": {"login": "dependabot[bot]"},
 	}]}
 	v := count(policy.violation) with input as inp with time.now_ns as now
