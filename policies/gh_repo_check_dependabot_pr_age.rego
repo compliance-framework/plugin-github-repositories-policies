@@ -29,12 +29,12 @@ violation[{}] if {
 
 title := "Enforcement of merging of pull requests after a grace period."
 description := `
-Automatic pull requests for dependency updates should be merged after 5 working days to reduce
- security vulnerabilities.
+Automatic pull requests for dependency updates should be merged after 5 working days to reduce 
+security vulnerabilities.
 `
 
 remarks := `
-A good practice is to merge trusted dependencies (e.g. spring boot) after a grace period like one week.
- Often, patches, fixes and minor updates are automatically merged. Be aware that automated merging requires 
- a high automated test coverage.
+A good practice is to merge trusted dependencies (e.g. spring boot) after a grace period like one week. 
+Often, patches, fixes and minor updates are automatically merged. Be aware that automated merging requires 
+a high automated test coverage.
 `
