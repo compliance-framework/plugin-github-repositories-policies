@@ -35,8 +35,8 @@ patterns := [
     # - JIRA-style tickets: ABC-123, PROJ-42, etc.
     "[A-Z][A-Z0-9]+-[0-9]+",
     #Reference to a Github Pull Request
-        # A full domain followed by anything (path)
-        # followed by github pull API
+    # A full domain followed by anything (path)
+    # followed by github pull API
     "https://[a-z0-9-.]+/.*/pull/[0-9]+"
 ]
 

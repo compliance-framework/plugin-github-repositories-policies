@@ -13,7 +13,7 @@ test_no_release_violation if {
   v.remarks == "No releases available for this repository."
 }
 
-test_release_without_references_vilation if {
+test_release_without_references_violation if {
   inp := {"last_release": {"body": "Body with release notes and no refs"}}
   violations := violation[v] with input as inp
   count(v) == 1
