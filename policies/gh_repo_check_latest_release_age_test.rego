@@ -11,7 +11,7 @@ test_satisfies_exists if {
 test_no_release_violation if {
   inp := {}
   violations := violation[v] with input as inp
-  count(violations) == 1
+  count(violation) == 1
   v.remarks == "No releases available for this repository."
 }
 
@@ -20,6 +20,6 @@ test_release_too_old_violation if {
   recent_timestamp := time.format(time.now_ns() - (200 * 24 * 60 * 60 * 1000 * 1000 * 1000))
   inp := {"last_release": {"body": "Body with release notes", "published_at": recent_timestamp}}
   violations := violation[v] with input as inp
-  count(v) == 1
+  count(violation) == 1
   v.remarks == "Latest Release is too old (older than 90 days)"
 }
