@@ -17,11 +17,41 @@ banned_licenses := {
     "licenseref-proprietary"
 }
 
-violation[{}] if {
+risk_templates := [
+  {
+    "name": "SBOM contains packages with banned licenses",
+    "title": "Non-Commercial or Proprietary Dependency Creates Legal and Distribution Risk",
+    "statement": "Including packages with non-commercial, source-available, or proprietary licenses in a software product can expose the organization to legal liability, prevent redistribution, and create compliance failures. Licenses like BUSL, SSPL, or PolyForm Noncommercial restrict commercial use and may conflict with the project's own open source license.",
+    "likelihood_hint": "moderate",
+    "impact_hint": "high",
+    "threat_refs": [
+      {
+        "system": "https://cwe.mitre.org",
+        "external_id": "CWE-1059",
+        "title": "Incomplete Documentation",
+        "url": "https://cwe.mitre.org/data/definitions/1059.html"
+      }
+    ],
+    "remediation": {
+      "title": "Remove or replace packages with banned licenses",
+      "description": "Identify all packages in the SBOM with non-commercial or proprietary licenses and replace them with OSI-approved open source alternatives, or obtain a commercial license where replacement is not feasible.",
+      "tasks": [
+        { "title": "Review SBOM to identify all packages with banned license identifiers" },
+        { "title": "Evaluate whether a replacement OSI-approved library is available for each offending package" },
+        { "title": "Remove or replace banned-license packages in the dependency manifest" },
+        { "title": "If replacement is not feasible, initiate a legal review and obtain a commercial license" },
+        { "title": "Regenerate the SBOM after remediation to confirm no banned licenses remain" },
+        { "title": "Add license scanning to CI/CD pipeline to prevent future introduction of banned licenses" }
+      ]
+    }
+  }
+]
+
+violation[{"id": "sbom_absent"}] if {
     sbom == null
 }
 
-violation[{}] if {
+violation[{"id": "banned_license_present"}] if {
     some i
     pkg := sbom.packages[i]
     lic := license_text(pkg)
