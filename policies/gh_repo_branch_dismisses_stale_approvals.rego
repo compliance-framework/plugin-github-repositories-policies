@@ -5,7 +5,40 @@ import future.keywords.if
 title := "Branch protection dismisses stale approvals"
 description := "Protected branches must dismiss outdated approvals when new commits are pushed to ensure reviewers revalidate changes."
 
-violation[{"remarks": sprintf("Branch protection for %q does not dismiss stale approvals after new commits.", [branch])}] if {
+risk_templates := [{
+  "name": "Stale approvals accepted after code changes",
+  "title": "Insufficient Code Review Integrity on Protected Branches",
+  "statement": "When stale approvals are not dismissed, new commits pushed after an approval are merged without re-review. Attackers or insiders can inject malicious code after approval, bypassing the intended review gate and introducing unauthorized changes into protected branches.",
+  "likelihood_hint": "high",
+  "impact_hint": "high",
+  "violation_ids": ["stale_approvals_not_dismissed"],
+  "threat_refs": [
+    {
+      "system": "https://cwe.mitre.org",
+      "external_id": "CWE-284",
+      "title": "Improper Access Control",
+      "url": "https://cwe.mitre.org/data/definitions/284.html"
+    },
+    {
+      "system": "https://cwe.mitre.org",
+      "external_id": "CWE-693",
+      "title": "Protection Mechanism Failure",
+      "url": "https://cwe.mitre.org/data/definitions/693.html"
+    }
+  ],
+  "remediation": {
+    "title": "Enable stale review dismissal on protected branches",
+    "description": "Configure branch protection rules to automatically dismiss pull request approvals when new commits are pushed, ensuring all code changes are reviewed in their final form before merging.",
+    "tasks": [
+      { "title": "Enable 'Dismiss stale pull request approvals when new commits are pushed' in branch protection settings" },
+      { "title": "Apply this setting to all protected branches (e.g., main, master, release/*)" },
+      { "title": "Audit recent merges to identify any that bypassed re-review after new commits" },
+      { "title": "Consider also enabling 'Require review from Code Owners' for sensitive paths" }
+    ]
+  }
+}]
+
+violation[{"id": "stale_approvals_not_dismissed", "remarks": sprintf("Branch protection for %q does not dismiss stale approvals after new commits.", [branch])}] if {
 	branch := input.protected_branches[_]
 	not branch_dismisses_stale_reviews(branch)
 }
