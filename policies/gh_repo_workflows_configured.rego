@@ -59,6 +59,7 @@ violation[{"id": "no_workflows_configured"}] if {
 }
 
 violation[{"id": "no_build_or_ci_workflow"}] if {
+	count(input.workflows) > 0
 	every workflow in input.workflows {
 		not contains(lower(workflow.name), "build")
 		not contains(lower(workflow.name), "ci")

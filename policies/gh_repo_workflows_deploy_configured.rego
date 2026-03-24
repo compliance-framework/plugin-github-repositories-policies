@@ -42,6 +42,7 @@ violation[{"id": "no_workflows_configured"}] if {
 }
 
 violation[{"id": "no_deploy_or_release_workflow"}] if {
+    count(input.workflows) > 0
     every workflow in input.workflows {
         not is_deploy_or_release(workflow)
     }
