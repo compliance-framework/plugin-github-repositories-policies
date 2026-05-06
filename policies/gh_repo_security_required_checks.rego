@@ -3,13 +3,11 @@ package compliance_framework.security_required_checks
 import future.keywords.if
 
 required_status_checks := object.get(input, "required_status_checks", {})
-protected_branches := object.get(input, "protected_branches", [])
 effective_branch_rules := object.get(input, "effective_branch_rules", {})
-default_branch := object.get(input, "default_branch", "")
 security_keywords := {"sast", "dast", "codeql", "code scanning", "security", "dependency", "dependabot", "vulnerability", "container scan", "trivy", "grype", "semgrep", "sbom", "secret"}
 
-title := "Protected branches require security status checks"
-description := "Protected and default branches should require at least one security-focused status check such as SAST, code scanning, dependency scanning, container scanning, SBOM, or secret scanning."
+title := "Repository requires security status checks"
+description := "Repositories should require at least one security-focused status check or code scanning ruleset such as SAST, code scanning, dependency scanning, container scanning, SBOM, or secret scanning."
 
 risk_templates := [{
 	"name": "No required security status checks",
@@ -29,22 +27,12 @@ risk_templates := [{
 	},
 }]
 
-branches_to_check := ({branch |
-	branch := protected_branches[_]
-} | {branch |
-	branch := object.keys(effective_branch_rules)[_]
-}) | {branch |
-	branch := default_branch
-	branch != ""
+violation[{"id": "security_required_check_missing", "remarks": "Repository has no security-focused required check or code scanning ruleset."}] if {
+	not repo_has_security_required_check
+	not any_branch_has_security_rule
 }
 
-violation[{"id": "security_required_check_missing", "remarks": sprintf("Branch %q has no security-focused required check.", [branch])}] if {
-	branch := branches_to_check[_]
-	not branch_has_security_check(branch)
-}
-
-branch_has_security_check(branch) if {
-	branch != ""
+repo_has_security_required_check if {
 	context := required_check_contexts[_]
 	security_check_name(context)
 }
@@ -66,7 +54,8 @@ required_check_contexts := {context |
 	context != ""
 }
 
-branch_has_security_check(branch) if {
+any_branch_has_security_rule if {
+	branch := object.keys(effective_branch_rules)[_]
 	rules := object.get(effective_branch_rules, branch, {})
 	tool := object.get(rules, "code_scanning_tools", [])[_]
 	tool != ""

@@ -10,7 +10,7 @@ test_violation_when_branch_has_only_build_check if {
 	}
 
 	violations := policy.violation with input as inp
-	violations[{"id": "security_required_check_missing", "remarks": "Branch \"main\" has no security-focused required check."}]
+	violations[{"id": "security_required_check_missing", "remarks": "Repository has no security-focused required check or code scanning ruleset."}]
 }
 
 test_pass_when_required_check_is_security_named if {
@@ -55,5 +55,5 @@ test_api_shaped_required_status_checks_do_not_create_pseudo_branches if {
 
 	violations := policy.violation with input as inp
 	count(violations) == 1
-	violations[{"id": "security_required_check_missing", "remarks": "Branch \"main\" has no security-focused required check."}]
+	violations[{"id": "security_required_check_missing", "remarks": "Repository has no security-focused required check or code scanning ruleset."}]
 }
