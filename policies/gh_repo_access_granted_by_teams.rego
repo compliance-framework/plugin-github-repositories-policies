@@ -2,8 +2,10 @@ package compliance_framework.repository_team_access
 
 import future.keywords.if
 
-repository_teams := object.get(input, "repository_teams", [])
-collaborators := object.get(input, "collaborators", [])
+raw_repository_teams := object.get(input, "repository_teams", [])
+raw_collaborators := object.get(input, "collaborators", [])
+repository_teams := [team | raw_repository_teams != null; some team in raw_repository_teams]
+collaborators := [collaborator | raw_collaborators != null; some collaborator in raw_collaborators]
 
 title := "Repository access is granted through teams"
 description := "Repositories should grant access through GitHub teams and avoid direct user collaborators."
@@ -25,6 +27,14 @@ risk_templates := [{
     ]
   }
 }]
+
+skip_reason := "Repository team and collaborator data is not available, so repository access cannot be evaluated." if {
+  raw_repository_teams == null
+}
+
+skip_reason := "Repository team and collaborator data is not available, so repository access cannot be evaluated." if {
+  raw_collaborators == null
+}
 
 violation[{"id": "no_repository_teams", "remarks": "Repository has no teams with explicit access."}] if {
   count(repository_teams) == 0

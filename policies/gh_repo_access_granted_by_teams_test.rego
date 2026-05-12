@@ -29,3 +29,15 @@ test_pass_when_team_access_without_direct_collaborators if {
   violations := policy.violation with input as inp
   count(violations) == 0
 }
+
+test_skip_when_repository_teams_unavailable if {
+  inp := {"repository_teams": null, "collaborators": []}
+
+  policy.skip_reason != "" with input as inp
+}
+
+test_skip_when_collaborators_unavailable if {
+  inp := {"repository_teams": [{"slug": "developers"}], "collaborators": null}
+
+  policy.skip_reason != "" with input as inp
+}
