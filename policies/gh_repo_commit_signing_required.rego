@@ -13,7 +13,7 @@ description := "Repositories should enforce commit signing on all protected bran
 skip_reason := "Repository does not have any protected branches or a default branch, so branch rules cannot be evaluated." if {
 	count(protected_branches) == 0
 	count(object.keys(effective_branch_rules)) == 0
-    default_branch == ""
+	default_branch == ""
 }
 
 risk_templates := [{

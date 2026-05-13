@@ -50,7 +50,7 @@ test_skip_when_no_rules_to_evaluate if {
 	inp := {
 		"protected_branches": [],
 		"effective_branch_rules": {},
-        "default_branch": "",
+		"default_branch": "",
 	}
 
 	policy.skip_reason != "" with input as inp
