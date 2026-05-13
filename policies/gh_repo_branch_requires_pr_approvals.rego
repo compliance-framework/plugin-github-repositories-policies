@@ -11,18 +11,6 @@ skip_reason := "Repository does not have any protected branches, so pull request
 	count(input.protected_branches) == 0
 }
 
-branch_protection_or_rulesets_configured if {
-	branch := input.protected_branches[_]
-	settings := branch_protection_settings(branch)
-	required_approvals(settings) > 0
-}
-
-branch_protection_or_rulesets_configured if {
-	branch := input.protected_branches[_]
-	rules := object.get(input.effective_branch_rules, branch, {})
-	object.get(rules, "required_approving_review_count", 0) > 0
-}
-
 risk_templates := [{
   "name": "Insufficient peer review before merge",
   "title": "Unreviewed Code Merged into Protected Branches",

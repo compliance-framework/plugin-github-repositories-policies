@@ -9,18 +9,6 @@ skip_reason := "Repository does not have any protected branches, so branch prote
 	count(input.protected_branches) == 0
 }
 
-branch_protection_or_rulesets_configured if {
-	branch := input.protected_branches[_]
-	settings := branch_protection_settings(branch)
-	require_code_owner_reviews(settings)
-}
-
-branch_protection_or_rulesets_configured if {
-	branch := input.protected_branches[_]
-	rules := object.get(input.effective_branch_rules, branch, {})
-	object.get(rules, "require_code_owner_review", false)
-}
-
 risk_templates := [
   {
     "name": "No CODEOWNERS review enforcement on protected branch",
