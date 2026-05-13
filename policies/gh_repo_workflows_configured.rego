@@ -60,11 +60,9 @@ violation[{"id": "no_workflows_configured"}] if {
 	count(input.workflows) == 0
 }
 
-violation[{"id": "required_workflows_missing"}] if {
+violation[{"id": "required_workflows_missing", "remarks": sprintf("Missing required workflows: %s", [concat(", ", missing_workflow_names)])}] if {
 	count(input.workflows) > 0
-	input.policy_input.workflow_names
-	some workflow_name in input.policy_input.workflow_names
-	not workflow_present(workflow_name)
+	count(missing_workflow_names) > 0
 }
 
 workflow_present(name) if {

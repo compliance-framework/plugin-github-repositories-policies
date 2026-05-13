@@ -9,11 +9,6 @@ skip_reason := "Repository does not have any protected branches, so branch prote
 	count(input.protected_branches) == 0
 }
 
-skip_reason := "Neither classic branch protection nor rulesets are configured for pull request reviews." if {
-	count(input.protected_branches) > 0
-	not branch_protection_or_rulesets_configured
-}
-
 branch_protection_or_rulesets_configured if {
 	branch := input.protected_branches[_]
 	settings := branch_protection_settings(branch)
