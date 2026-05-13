@@ -5,8 +5,21 @@ import future.keywords.if
 max_admin_teams := 2
 raw_repository_teams := object.get(input, "repository_teams", null)
 raw_collaborators := object.get(input, "collaborators", null)
-repository_teams := object.get(input, "repository_teams", [])
-collaborators := object.get(input, "collaborators", [])
+repository_teams := [] if {
+  raw_repository_teams == null
+}
+
+repository_teams := raw_repository_teams if {
+  raw_repository_teams != null
+}
+
+collaborators := [] if {
+  raw_collaborators == null
+}
+
+collaborators := raw_collaborators if {
+  raw_collaborators != null
+}
 
 title := "Repository administrator access is limited"
 description := sprintf("Repository admin access should be assigned through no more than %d team(s), with no direct admin collaborators.", [max_admin_teams])

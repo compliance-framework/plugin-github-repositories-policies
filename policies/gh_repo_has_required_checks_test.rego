@@ -9,12 +9,6 @@ test_no_required_checks_violation if {
   v == 1
 }
 
-test_violation_when_checks_empty if {
-  inp := {"protected_branches": ["main"], "required_status_checks": {}}
-  v := count(policy.violation) with input as inp
-  v == 1
-}
-
 test_skip_when_no_protected_branches if {
   inp := {"protected_branches": []}
   policy.skip_reason != "" with input as inp

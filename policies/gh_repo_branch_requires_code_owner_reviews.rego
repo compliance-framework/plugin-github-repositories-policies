@@ -16,7 +16,8 @@ skip_reason := "Neither classic branch protection nor rulesets are configured fo
 
 branch_protection_or_rulesets_configured if {
 	branch := input.protected_branches[_]
-	branch_protection_settings(branch)
+	settings := branch_protection_settings(branch)
+	require_code_owner_reviews(settings)
 }
 
 branch_protection_or_rulesets_configured if {
