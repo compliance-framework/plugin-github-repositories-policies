@@ -7,6 +7,14 @@ passed := count([x |
 ])
 tolerance := 0.2
 
+title := "Repository has healthy workflow runs"
+description := sprintf("All repositories must have healthy workflow runs. [%d/%d - tolerance %d%%]", [passed, total, tolerance * 100])
+remarks := sprintf("All repositories must have healthy workflow runs. Healthy workflow runs are calculated with a tolerance of %d%%", [tolerance * 100])
+
+skip_reason := "Repository does not have any workflow runs, so workflow health cannot be evaluated." if {
+    total == 0
+}
+
 risk_templates := [{
   "name": "Repository has unhealthy workflow run failure rate",
   "title": "Excessive CI/CD Workflow Failures Indicate Systemic Build or Test Instability",
@@ -44,7 +52,3 @@ violation[{"id": "unhealthy_workflow_runs"}] if {
     tolerance_amount = max([total, passed]) * tolerance
 	abs(total - passed) > tolerance_amount
 }
-
-title := "Repository has healthy workflow runs"
-description := sprintf("All repositories must have healthy workflow runs. [%d/%d - tolerance %d%%]", [passed, total, tolerance * 100])
-remarks := sprintf("All repositories must have healthy workflow runs. Healthy workflow runs are calculated with a tolerance of %d%%", [tolerance * 100])

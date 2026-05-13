@@ -7,6 +7,10 @@ environments := object.get(input, "environments", [])
 title := "Production deployment environments require protection rules"
 description := "Production-like GitHub environments should require reviewer or wait timer protection before deployment."
 
+skip_reason := "Repository does not have any environments, so environment protection rules cannot be evaluated." if {
+	count(environments) == 0
+}
+
 risk_templates := [{
 	"name": "Deployment environment lacks protection rules",
 	"title": "Production Deployments Can Proceed Without Environment-Level Approval",

@@ -6,6 +6,10 @@ deployments := object.get(input, "deployments", [])
 title := "Failed deployments are tracked to resolution"
 description := "Failed or errored deployments must be followed by a later successful deployment to the same environment, demonstrating that the failure was remediated or rolled back."
 
+skip_reason := "Repository does not have any deployments, so failed deployment tracking cannot be evaluated." if {
+	count(deployments) == 0
+}
+
 risk_templates := [{
 	"name": "Unresolved failed deployment observed",
 	"title": "Failed Deployment Requires Successful Remediation or Rollback",

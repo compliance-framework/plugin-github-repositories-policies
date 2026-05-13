@@ -3,11 +3,21 @@ package compliance_framework.repository_admin_access_limited
 import future.keywords.if
 
 max_admin_teams := 2
+raw_repository_teams := object.get(input, "repository_teams", null)
+raw_collaborators := object.get(input, "collaborators", null)
 repository_teams := object.get(input, "repository_teams", [])
 collaborators := object.get(input, "collaborators", [])
 
 title := "Repository administrator access is limited"
 description := sprintf("Repository admin access should be assigned through no more than %d team(s), with no direct admin collaborators.", [max_admin_teams])
+
+skip_reason := "Repository team and collaborator data is not available, so repository access cannot be evaluated." if {
+  raw_repository_teams == null
+}
+
+skip_reason := "Repository team and collaborator data is not available, so repository access cannot be evaluated." if {
+  raw_collaborators == null
+}
 
 risk_templates := [{
   "name": "Repository administrator access is too broad",

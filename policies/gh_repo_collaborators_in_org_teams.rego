@@ -2,11 +2,21 @@ package compliance_framework.repository_collaborators_in_org_teams
 
 import future.keywords.if
 
+raw_collaborators := object.get(input, "collaborators", null)
+raw_org_teams := object.get(input, "org_teams", null)
 collaborators := object.get(input, "collaborators", [])
 org_teams := object.get(input, "org_teams", [])
 
 title := "Direct repository collaborators belong to organization teams"
 description := "Any direct repository collaborator should also be represented in an organization team for access review and offboarding visibility."
+
+skip_reason := "Collaborator and organization team data is not available, so collaborator membership cannot be evaluated." if {
+  raw_collaborators == null
+}
+
+skip_reason := "Collaborator and organization team data is not available, so collaborator membership cannot be evaluated." if {
+  raw_org_teams == null
+}
 
 risk_templates := [{
   "name": "Repository collaborator missing from organization teams",

@@ -3,7 +3,27 @@ package compliance_framework.branch_dismisses_stale_approvals
 import future.keywords.if
 
 title := "Branch protection dismisses stale approvals"
-description := "Protected branches must dismiss outdated approvals when new commits are pushed to ensure reviewers revalidate changes."
+description := "Protected branches must be configured to dismiss stale pull request approvals when new commits are pushed."
+
+skip_reason := "Repository does not have any protected branches, so branch protection rules cannot be evaluated." if {
+	count(input.protected_branches) == 0
+}
+
+skip_reason := "Neither classic branch protection nor rulesets are configured for pull request reviews." if {
+	count(input.protected_branches) > 0
+	not branch_protection_or_rulesets_configured
+}
+
+branch_protection_or_rulesets_configured if {
+	branch := input.protected_branches[_]
+	branch_protection_settings(branch)
+}
+
+branch_protection_or_rulesets_configured if {
+	branch := input.protected_branches[_]
+	rules := object.get(input.effective_branch_rules, branch, {})
+	object.get(rules, "dismiss_stale_reviews_on_push", false)
+}
 
 risk_templates := [{
   "name": "Stale approvals accepted after code changes",
@@ -46,6 +66,11 @@ violation[{"id": "stale_approvals_not_dismissed", "remarks": sprintf("Branch pro
 branch_dismisses_stale_reviews(branch) if {
 	settings := branch_protection_settings(branch)
 	require_dismiss_stale_reviews(settings)
+}
+
+branch_dismisses_stale_reviews(branch) if {
+	rules := object.get(input.effective_branch_rules, branch, {})
+	object.get(rules, "dismiss_stale_reviews_on_push", false)
 }
 
 branch_protection_settings(branch) := settings if {

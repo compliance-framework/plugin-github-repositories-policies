@@ -55,6 +55,25 @@ test_violation_when_later_success_is_different_environment if {
 	count(violations) == 1
 }
 
+test_pass_when_no_deployments if {
+	inp := {
+		"failed_deployments": [],
+		"deployments": [{"deployment": {"id": 43, "environment": "production"}, "statuses": [{"state": "success"}]}],
+	}
+
+	violations := policy.violation with input as inp
+	count(violations) == 0
+}
+
+test_skip_when_no_deployments if {
+	inp := {
+		"failed_deployments": [],
+		"deployments": [],
+	}
+
+	policy.skip_reason != "" with input as inp
+}
+
 test_violation_when_success_has_higher_id_but_earlier_created_at if {
 	inp := {
 		"failed_deployments": [{"deployment": {"id": 42, "environment": "production", "created_at": "2026-05-05T10:00:00Z"}, "statuses": [{"state": "failure"}]}],

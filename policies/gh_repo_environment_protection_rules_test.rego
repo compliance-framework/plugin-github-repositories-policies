@@ -9,6 +9,12 @@ test_violation_when_no_production_environment if {
 	violations[{"id": "production_environment_missing", "remarks": "Repository has no production-like deployment environment."}]
 }
 
+test_skip_when_no_environments if {
+	inp := {"environments": []}
+
+	policy.skip_reason != "" with input as inp
+}
+
 test_violation_when_production_environment_unprotected if {
 	inp := {"environments": [{"name": "production"}]}
 

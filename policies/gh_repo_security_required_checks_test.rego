@@ -57,3 +57,12 @@ test_api_shaped_required_status_checks_do_not_create_pseudo_branches if {
 	count(violations) == 1
 	violations[{"id": "security_required_check_missing", "remarks": "Repository has no security-focused required check or code scanning ruleset."}]
 }
+
+test_skip_when_no_rules_to_evaluate if {
+	inp := {
+		"protected_branches": [],
+		"effective_branch_rules": {},
+	}
+
+	policy.skip_reason != "" with input as inp
+}
