@@ -2,50 +2,86 @@ package compliance_framework.repository_environment_protection_test
 
 import data.compliance_framework.repository_environment_protection as policy
 
-test_violation_when_no_production_environment if {
-	inp := {"environments": [{"name": "staging"}]}
-
-	violations := policy.violation with input as inp
-	violations[{"id": "production_environment_missing", "remarks": "Repository has no production-like deployment environment."}]
-}
-
-test_skip_when_no_environments if {
-	inp := {"environments": []}
-
-	policy.skip_reason != "" with input as inp
-}
-
-test_violation_when_production_environment_unprotected if {
-	inp := {"environments": [{"name": "production"}]}
+test_violation_when_environment_unprotected_with_policy_input if {
+	inp := {
+		"environments": [{"name": "production"}],
+		"policy_input": {"environment_names": ["production"]},
+	}
 
 	violations := policy.violation with input as inp
 	violations[{"id": "environment_unprotected", "remarks": "Environment \"production\" has no required reviewers, wait timer, or branch deployment policy."}]
 }
 
-test_pass_when_production_environment_has_reviewers if {
-	inp := {"environments": [{"name": "prod", "reviewers": [{"type": "team", "id": 1}]}]}
+test_violation_when_all_environments_unprotected_no_policy_input if {
+	inp := {"environments": [{"name": "staging"}, {"name": "production"}]}
+
+	violations := policy.violation with input as inp
+	count(violations) == 2
+}
+
+test_skip_when_no_environments_and_no_policy_input if {
+	inp := {"environments": []}
+
+	policy.skip_reason != "" with input as inp
+}
+
+test_violation_when_expected_environment_missing if {
+	inp := {
+		"environments": [],
+		"policy_input": {"environment_names": ["production"]},
+	}
+
+	violations := policy.violation with input as inp
+	violations[{"id": "environment_missing", "remarks": "Expected environment \"production\" does not exist in repository."}]
+}
+
+test_pass_when_environment_has_reviewers_with_policy_input if {
+	inp := {
+		"environments": [{"name": "production", "reviewers": [{"type": "team", "id": 1}]}],
+		"policy_input": {"environment_names": ["production"]},
+	}
 
 	violations := policy.violation with input as inp
 	count(violations) == 0
 }
 
-test_pass_when_production_environment_has_branch_policy if {
-	inp := {"environments": [{"name": "production", "deployment_branch_policy": {"protected_branches": true}}]}
+test_pass_when_environment_has_branch_policy_with_policy_input if {
+	inp := {
+		"environments": [{"name": "production", "deployment_branch_policy": {"protected_branches": true}}],
+		"policy_input": {"environment_names": ["production"]},
+	}
 
 	violations := policy.violation with input as inp
 	count(violations) == 0
 }
 
-test_non_production_substrings_are_not_production_like if {
-	inp := {"environments": [{"name": "product"}, {"name": "prod-test"}]}
+test_pass_when_non_specified_environment_unprotected if {
+	inp := {
+		"environments": [{"name": "staging"}, {"name": "production", "reviewers": [{"type": "team", "id": 1}]}],
+		"policy_input": {"environment_names": ["production"]},
+	}
 
 	violations := policy.violation with input as inp
-	violations[{"id": "production_environment_missing", "remarks": "Repository has no production-like deployment environment."}]
-	count(violations) == 1
+	count(violations) == 0
 }
 
-test_pass_when_common_production_variant_has_reviewers if {
-	inp := {"environments": [{"name": "production-us-east", "reviewers": [{"type": "team", "id": 1}]}]}
+test_violation_when_specified_environment_unprotected_with_other_protected if {
+	inp := {
+		"environments": [{"name": "staging", "reviewers": [{"type": "team", "id": 1}]}, {"name": "production"}],
+		"policy_input": {"environment_names": ["production"]},
+	}
+
+	violations := policy.violation with input as inp
+	violations[{"id": "environment_unprotected", "remarks": "Environment \"production\" has no required reviewers, wait timer, or branch deployment policy."}]
+}
+
+test_pass_when_all_environments_protected_no_policy_input if {
+	inp := {
+		"environments": [
+			{"name": "staging", "reviewers": [{"type": "team", "id": 1}]},
+			{"name": "production", "deployment_branch_policy": {"protected_branches": true}},
+		],
+	}
 
 	violations := policy.violation with input as inp
 	count(violations) == 0

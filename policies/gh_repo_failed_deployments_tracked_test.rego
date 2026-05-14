@@ -65,6 +65,15 @@ test_skip_when_no_deployments if {
 	policy.skip_reason != "" with input as inp
 }
 
+test_skip_when_deployments_null if {
+	inp := {
+		"failed_deployments": null,
+		"deployments": null,
+	}
+
+	policy.skip_reason != "" with input as inp
+}
+
 test_violation_when_success_has_higher_id_but_earlier_created_at if {
 	inp := {
 		"failed_deployments": [{"deployment": {"id": 42, "environment": "production", "created_at": "2026-05-05T10:00:00Z"}, "statuses": [{"state": "failure"}]}],
