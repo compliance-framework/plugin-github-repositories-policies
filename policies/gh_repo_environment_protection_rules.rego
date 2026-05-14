@@ -22,6 +22,7 @@ unprotected_environment_names := [name |
 
 description := msg if {
 	count(missing_environment_names) > 0
+	count(unprotected_environment_names) == 0
 	msg := sprintf("Missing required environments: %s", [concat(", ", missing_environment_names)])
 }
 

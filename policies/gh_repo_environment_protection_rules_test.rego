@@ -86,3 +86,13 @@ test_pass_when_all_environments_protected_no_policy_input if {
 	violations := policy.violation with input as inp
 	count(violations) == 0
 }
+
+test_description_combined_missing_and_unprotected if {
+	inp := {
+		"environments": [{"name": "staging"}],
+		"policy_input": {"environment_names": ["production", "staging"]},
+	}
+
+	desc := policy.description with input as inp
+	desc == "Missing required environments: production. Environments without protection: staging"
+}
