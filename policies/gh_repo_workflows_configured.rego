@@ -7,6 +7,7 @@ risk_templates := [
     "statement": "A repository with no CI/CD workflows has no automated mechanism to build, test, or validate code changes before they are merged or deployed. This means defects, security vulnerabilities, and regressions may go undetected until they reach production, significantly increasing risk exposure.",
     "likelihood_hint": "high",
     "impact_hint": "high",
+    "violation_ids": ["no_workflows_configured"],
     "threat_refs": [
       {
         "system": "https://cwe.mitre.org",
@@ -27,12 +28,12 @@ risk_templates := [
     }
   },
   {
-    "name": "No build or CI workflow found among configured workflows",
-    "title": "No Automated Build Validation Despite Workflows Being Present",
-    "statement": "Workflows exist in the repository but none are identifiable as a build or CI pipeline. Without an automated build validation step, code changes may be integrated without confirming the codebase compiles and tests pass, creating an undetected quality and security regression risk.",
+    "name": "Required CI/CD workflows missing",
+    "title": "Missing Required CI/CD Workflows Compromises Quality Assurance",
+    "statement": "When required CI/CD workflows are not present, critical build, test, or validation steps may be skipped, allowing defective or non-compliant code to merge without proper quality gates. This increases the risk of introducing vulnerabilities and regressions into production.",
     "likelihood_hint": "moderate",
     "impact_hint": "moderate",
-    "violation_ids": ["no_build_or_ci_workflow"],
+    "violation_ids": ["required_workflows_missing"],
     "threat_refs": [
       {
         "system": "https://cwe.mitre.org",
@@ -42,13 +43,14 @@ risk_templates := [
       }
     ],
     "remediation": {
-      "title": "Ensure at least one workflow is named to indicate build or CI purpose",
-      "description": "Rename or add a workflow whose name includes 'build' or 'ci' to make automated build validation easily identifiable, and ensure it is configured as a required check.",
+      "title": "Add missing required CI/CD workflows",
+      "description": "Create the required GitHub Actions workflows specified in the policy configuration to ensure all necessary quality gates are in place.",
       "tasks": [
-        { "title": "Review existing workflows and identify which one performs build and test steps" },
-        { "title": "Rename that workflow to include 'build' or 'ci' in its name field" },
-        { "title": "If no such workflow exists, create a dedicated CI workflow" },
-        { "title": "Set the identified workflow as a required status check on protected branches" }
+        { "title": "Identify which required workflows are missing from the repository" },
+        { "title": "Create each missing workflow file in .github/workflows/" },
+        { "title": "Configure triggers (push, pull_request, schedule) as appropriate" },
+        { "title": "Add necessary build, test, and validation steps to each workflow" },
+        { "title": "Set workflows as required status checks on protected branches if needed" }
       ]
     }
   }
@@ -58,13 +60,44 @@ violation[{"id": "no_workflows_configured"}] if {
 	count(input.workflows) == 0
 }
 
-violation[{"id": "no_build_or_ci_workflow"}] if {
+violation[{"id": "required_workflows_missing", "remarks": sprintf("Missing required workflows: %s", [concat(", ", missing_workflow_names)])}] if {
 	count(input.workflows) > 0
-	every workflow in input.workflows {
-		not contains(lower(workflow.name), "build")
-		not contains(lower(workflow.name), "ci")
-	}
+	count(missing_workflow_names) > 0
 }
 
+workflow_present(name) if {
+	some workflow in input.workflows
+	workflow_filename(workflow) == name
+}
+
+workflow_filename(workflow) := filename if {
+	path := object.get(workflow, "path", "")
+	parts := split(path, "/")
+	filename := parts[count(parts) - 1]
+}
+
+
 title := "Repository has workflows configured"
-description := "All repositories must have workflows configured."
+
+missing_workflow_names := [workflow_name |
+	count(input.workflows) > 0
+	input.policy_input.workflow_names
+	some workflow_name in input.policy_input.workflow_names
+	not workflow_present(workflow_name)
+]
+
+description := msg if {
+	count(input.workflows) == 0
+	msg := "No workflows configured in repository"
+}
+
+description := msg if {
+	count(input.workflows) > 0
+	count(missing_workflow_names) > 0
+	msg := sprintf("Missing required workflows: %s", [concat(", ", missing_workflow_names)])
+}
+
+description := "All repositories must have workflows configured." if {
+	count(input.workflows) > 0
+	count(missing_workflow_names) == 0
+}

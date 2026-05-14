@@ -5,6 +5,10 @@ import future.keywords.if
 title := "Branch protection requires code owner review"
 description := "Protected branches must enforce CODEOWNERS approvals so domain experts approve changes before merging."
 
+skip_reason := "Repository does not have any protected branches, so branch protection rules cannot be evaluated." if {
+	count(input.protected_branches) == 0
+}
+
 risk_templates := [
   {
     "name": "No CODEOWNERS review enforcement on protected branch",
@@ -79,14 +83,18 @@ violation[{"id": "codeowners_review_not_required", "remarks": sprintf("Branch pr
 
 violation[{"id": "codeowners_file_missing_or_empty", "remarks": sprintf("Branch protection for %q requires CODEOWNERS review but no CODEOWNERS file exists or is empty.", [branch])}] if {
 	branch := input.protected_branches[_]
-	settings := branch_protection_settings(branch)
-	require_code_owner_reviews(settings)
+	branch_requires_code_owner_reviews(branch)
 	not has_valid_codeowners_file
 }
 
 branch_requires_code_owner_reviews(branch) if {
 	settings := branch_protection_settings(branch)
 	require_code_owner_reviews(settings)
+}
+
+branch_requires_code_owner_reviews(branch) if {
+	rules := object.get(input.effective_branch_rules, branch, {})
+	object.get(rules, "require_code_owner_review", false)
 }
 
 branch_protection_settings(branch) := settings if {

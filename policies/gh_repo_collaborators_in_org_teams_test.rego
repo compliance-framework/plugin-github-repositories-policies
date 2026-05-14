@@ -28,3 +28,22 @@ test_pass_when_no_direct_collaborators if {
   violations := policy.violation with input as inp
   count(violations) == 0
 }
+
+test_pass_when_no_collaborators if {
+  inp := {"collaborators": [], "org_teams": []}
+
+  violations := policy.violation with input as inp
+  count(violations) == 0
+}
+
+test_skip_when_collaborators_unavailable if {
+  inp := {"collaborators": null, "org_teams": []}
+
+  policy.skip_reason != "" with input as inp
+}
+
+test_skip_when_org_teams_unavailable if {
+  inp := {"collaborators": [], "org_teams": null}
+
+  policy.skip_reason != "" with input as inp
+}

@@ -1,10 +1,29 @@
 package compliance_framework.failed_deployments_tracked
 
-failed_deployments := object.get(input, "failed_deployments", [])
-deployments := object.get(input, "deployments", [])
+raw_failed_deployments := object.get(input, "failed_deployments", null)
+raw_deployments := object.get(input, "deployments", null)
+failed_deployments := [] if {
+  raw_failed_deployments == null
+}
+
+failed_deployments := raw_failed_deployments if {
+  raw_failed_deployments != null
+}
+
+deployments := [] if {
+  raw_deployments == null
+}
+
+deployments := raw_deployments if {
+  raw_deployments != null
+}
 
 title := "Failed deployments are tracked to resolution"
 description := "Failed or errored deployments must be followed by a later successful deployment to the same environment, demonstrating that the failure was remediated or rolled back."
+
+skip_reason := "Repository does not have any deployments, so failed deployment tracking cannot be evaluated." if {
+	count(deployments) == 0
+}
 
 risk_templates := [{
 	"name": "Unresolved failed deployment observed",

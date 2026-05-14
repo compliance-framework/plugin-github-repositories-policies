@@ -9,6 +9,11 @@ test_no_runs_ok if {
   v == 0
 }
 
+test_skip_when_no_workflow_runs if {
+    inp := {"workflow_runs": []}
+    policy.skip_reason != "" with input as inp
+}
+
 test_within_tolerance_ok if {
   inp := {"workflow_runs": [
     {"conclusion": "success"},

@@ -45,3 +45,13 @@ test_violation_when_signing_missing_on_default_branch if {
 	violations := policy.violation with input as inp
 	violations[{"id": "commit_signing_not_required", "remarks": "Branch \"main\" does not require signed commits."}]
 }
+
+test_skip_when_no_rules_to_evaluate if {
+	inp := {
+		"protected_branches": [],
+		"effective_branch_rules": {},
+		"default_branch": "",
+	}
+
+	policy.skip_reason != "" with input as inp
+}

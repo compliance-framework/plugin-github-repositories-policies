@@ -101,3 +101,68 @@ test_pass_when_code_owner_is_and_bpr_are_set if {
 	violations := policy.violation with input as inp
 	count(violations) == 0
 }
+
+test_pass_when_code_owner_is_and_effective_rules_are_set if {
+	inp := {
+        "code_owners": {
+            "content": "something"
+        },
+		"protected_branches": ["main"],
+		"branch_protection_rules": {},
+		"effective_branch_rules": {
+			"main": {
+				"require_code_owner_review": true,
+			},
+		},
+	}
+
+	violations := policy.violation with input as inp
+	count(violations) == 0
+}
+
+test_violation_when_effective_rules_code_owner_disabled if {
+	inp := {
+		"protected_branches": ["main"],
+		"branch_protection_rules": {},
+		"effective_branch_rules": {
+			"main": {
+				"require_code_owner_review": false,
+			},
+		},
+	}
+
+	violations := policy.violation with input as inp
+	count(violations) == 1
+}
+
+test_violation_when_effective_rules_code_owner_not_set if {
+	inp := {
+		"protected_branches": ["main"],
+		"branch_protection_rules": {},
+		"effective_branch_rules": {
+			"main": {},
+		},
+	}
+
+	violations := policy.violation with input as inp
+	count(violations) == 1
+}
+
+test_violation_codeowners_not_set_with_effective_rules if {
+	inp := {
+        "code_owners": {
+            "content": ""
+        },
+		"protected_branches": ["main"],
+		"branch_protection_rules": {},
+		"effective_branch_rules": {
+			"main": {
+				"require_code_owner_review": true,
+			},
+		},
+	}
+
+	violations := policy.violation with input as inp
+	count(violations) == 1
+}
+

@@ -4,8 +4,12 @@ import future.keywords.if
 
 min_required_approvals := 1
 
-title := "Branch protection enforces minimum PR approvals"
-description := sprintf("Protected branches must require at least %d approving review(s) before merging.", [min_required_approvals])
+title := "Protected branches require pull request approvals"
+description := sprintf("Protected branches must require at least %d pull request approval(s) before merging.", [min_required_approvals])
+
+skip_reason := "Repository does not have any protected branches, so pull request approval requirements cannot be evaluated." if {
+	count(input.protected_branches) == 0
+}
 
 risk_templates := [{
   "name": "Insufficient peer review before merge",
@@ -55,6 +59,11 @@ violation[{"id": "insufficient_pr_approvals", "remarks": sprintf("Branch protect
 branch_meets_approval_requirement(branch) if {
 	settings := branch_protection_settings(branch)
 	required_approvals(settings) >= min_required_approvals
+}
+
+branch_meets_approval_requirement(branch) if {
+	rules := object.get(input.effective_branch_rules, branch, {})
+	object.get(rules, "required_approving_review_count", 0) >= min_required_approvals
 }
 
 branch_protection_settings(branch) := settings if {

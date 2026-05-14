@@ -9,6 +9,11 @@ security_keywords := {"sast", "dast", "codeql", "code scanning", "security", "de
 title := "Repository requires security status checks"
 description := "Repositories should require at least one security-focused status check or code scanning ruleset such as SAST, code scanning, dependency scanning, container scanning, SBOM, or secret scanning."
 
+skip_reason := "Repository does not have any protected branches or effective rules, so required checks cannot be evaluated." if {
+	count(object.get(input, "protected_branches", [])) == 0
+	count(object.keys(effective_branch_rules)) == 0
+}
+
 risk_templates := [{
 	"name": "No required security status checks",
 	"title": "Security Validation Is Not Required Before Merge",

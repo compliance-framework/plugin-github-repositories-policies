@@ -1,5 +1,12 @@
 package compliance_framework.has_required_checks
 
+title := "Repository has required status checks"
+description := "A repository must have required status checks configured to ensure that all code changes are properly tested and validated before being merged."
+
+skip_reason := "Repository does not have any protected branches, so required status checks cannot be evaluated." if {
+	count(object.get(input, "protected_branches", [])) == 0
+}
+
 risk_templates := [{
   "name": "No required status checks configured",
   "title": "Untested Code Can Be Merged Without CI Validation",
@@ -36,6 +43,3 @@ risk_templates := [{
 violation[{"id": "no_required_checks"}] if {
     count(input.required_status_checks) == 0
 }
-
-title := "Repository has required status checks"
-description := "A repository must have required status checks configured to ensure that all code changes are properly tested and validated before being merged."

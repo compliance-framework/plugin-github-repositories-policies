@@ -7,8 +7,14 @@ branch_protection_rules := object.get(input, "branch_protection_rules", {})
 effective_branch_rules := object.get(input, "effective_branch_rules", {})
 default_branch := object.get(input, "default_branch", "")
 
-title := "Protected branches require signed commits"
-description := "Protected and default branches should require verified commit signatures through branch protection or repository rulesets."
+title := "Repository requires commit signing"
+description := "Repositories should enforce commit signing on all protected branches and the default branch."
+
+skip_reason := "Repository does not have any protected branches or a default branch, so branch rules cannot be evaluated." if {
+	count(protected_branches) == 0
+	count(object.keys(effective_branch_rules)) == 0
+	default_branch == ""
+}
 
 risk_templates := [{
 	"name": "Commit signing not required",
