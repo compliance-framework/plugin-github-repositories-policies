@@ -94,7 +94,7 @@ description := msg if {
 description := msg if {
 	count(input.workflows) > 0
 	count(missing_workflow_names) > 0
-	msg := sprintf("Missing required workflows %s", [concat(", ", missing_workflow_names)])
+	msg := sprintf("Missing required workflows: %s", [concat(", ", missing_workflow_names)])
 }
 
 description := "All repositories must have workflows configured." if {

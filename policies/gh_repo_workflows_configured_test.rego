@@ -66,7 +66,7 @@ test_description_missing_required_workflow if {
     }
   }
   desc := policy.description with input as inp
-  desc == "Missing required workflows build.yml"
+  desc == "Missing required workflows: build.yml"
 }
 
 test_description_multiple_missing_required_workflows if {
@@ -79,7 +79,7 @@ test_description_multiple_missing_required_workflows if {
     }
   }
   desc := policy.description with input as inp
-  desc == "Missing required workflows build.yml, main.yml"
+  desc == "Missing required workflows: build.yml, main.yml"
 }
 
 test_description_default if {
