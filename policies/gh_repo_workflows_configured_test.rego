@@ -15,13 +15,10 @@ test_required_workflows_present if {
     "workflows": [
       {"path": ".github/workflows/ci.yml"},
       {"path": ".github/workflows/build.yml"}
-    ],
-    "policy_input": {
-      "workflow_names": ["ci.yml", "build.yml"]
-    }
+    ]
   }
 
-  v := count(policy.violation) with input as inp
+  v := count(policy.violation) with input as inp with data.workflow_names as ["ci.yml", "build.yml"]
   v == 0
 }
 
@@ -29,17 +26,14 @@ test_required_workflows_missing if {
   inp := {
     "workflows": [
       {"path": ".github/workflows/ci.yml"}
-    ],
-    "policy_input": {
-      "workflow_names": ["ci.yml", "build.yml"]
-    }
+    ]
   }
 
-  v := count(policy.violation) with input as inp
+  v := count(policy.violation) with input as inp with data.workflow_names as ["ci.yml", "build.yml"]
   v == 1
 }
 
-test_no_policy_input_no_violation if {
+test_no_policy_data_no_violation if {
   inp := {
     "workflows": [
       {"path": ".github/workflows/some-workflow.yml"}
@@ -48,6 +42,10 @@ test_no_policy_input_no_violation if {
 
   v := count(policy.violation) with input as inp
   v == 0
+}
+
+test_workflow_names_loaded_from_bundled_data_document if {
+  policy.workflow_names == data.workflow_names
 }
 
 test_description_no_workflows if {
@@ -60,12 +58,9 @@ test_description_missing_required_workflow if {
   inp := {
     "workflows": [
       {"path": ".github/workflows/ci.yml"}
-    ],
-    "policy_input": {
-      "workflow_names": ["ci.yml", "build.yml"]
-    }
+    ]
   }
-  desc := policy.description with input as inp
+  desc := policy.description with input as inp with data.workflow_names as ["ci.yml", "build.yml"]
   desc == "Missing required workflows: build.yml"
 }
 
@@ -73,13 +68,21 @@ test_description_multiple_missing_required_workflows if {
   inp := {
     "workflows": [
       {"path": ".github/workflows/ci.yml"}
-    ],
-    "policy_input": {
-      "workflow_names": ["ci.yml", "build.yml", "main.yml"]
-    }
+    ]
   }
-  desc := policy.description with input as inp
+  desc := policy.description with input as inp with data.workflow_names as ["ci.yml", "build.yml", "main.yml"]
   desc == "Missing required workflows: build.yml, main.yml"
+}
+
+test_description_required_workflows_present_from_policy_data if {
+  inp := {
+    "workflows": [
+      {"path": ".github/workflows/ci.yml"},
+      {"path": ".github/workflows/build.yml"}
+    ]
+  }
+  desc := policy.description with input as inp with data.workflow_names as ["ci.yml", "build.yml"]
+  desc == "All required workflows are configured: ci.yml, build.yml"
 }
 
 test_description_default if {

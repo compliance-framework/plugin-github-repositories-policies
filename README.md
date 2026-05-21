@@ -3,7 +3,7 @@
 ## Testing
 
 ```shell
-opa test policies
+make test
 ```
 
 ## Bundling
