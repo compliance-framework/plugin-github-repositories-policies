@@ -79,10 +79,15 @@ workflow_filename(workflow) := filename if {
 
 title := "Repository has workflows configured"
 
+default workflow_names := []
+
+workflow_names := data.workflow_names if {
+	is_array(data.workflow_names)
+}
+
 missing_workflow_names := [workflow_name |
 	count(input.workflows) > 0
-	input.policy_input.workflow_names
-	some workflow_name in input.policy_input.workflow_names
+	some workflow_name in workflow_names
 	not workflow_present(workflow_name)
 ]
 
@@ -97,7 +102,15 @@ description := msg if {
 	msg := sprintf("Missing required workflows: %s", [concat(", ", missing_workflow_names)])
 }
 
+description := msg if {
+	count(input.workflows) > 0
+	count(workflow_names) > 0
+	count(missing_workflow_names) == 0
+	msg := sprintf("All required workflows are configured: %s", [concat(", ", workflow_names)])
+}
+
 description := "All repositories must have workflows configured." if {
 	count(input.workflows) > 0
+	count(workflow_names) == 0
 	count(missing_workflow_names) == 0
 }
