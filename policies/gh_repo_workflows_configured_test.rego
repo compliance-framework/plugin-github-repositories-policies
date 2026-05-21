@@ -44,6 +44,10 @@ test_no_policy_data_no_violation if {
   v == 0
 }
 
+test_workflow_names_loaded_from_bundled_data_document if {
+  policy.workflow_names == data.workflow_names
+}
+
 test_description_no_workflows if {
   inp := {"workflows": []}
   desc := policy.description with input as inp

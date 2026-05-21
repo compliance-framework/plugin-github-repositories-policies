@@ -3,7 +3,7 @@
 ## Testing
 
 ```shell
-opa test policies
+opa test policies data.json
 ```
 
 ## Bundling

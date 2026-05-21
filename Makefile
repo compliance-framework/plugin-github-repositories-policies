@@ -24,10 +24,10 @@ help-all: ## Display all help items, ie including plumbing targets
 
 ##@ Policies
 test: ## Test policy files
-	@OPA test policies
+	@OPA test policies data.json
 
 validate: ## Validate policy files
-	@opa check policies
+	@opa check policies data.json
 
 clean: # Cleanup build artifacts
 	@rm -f dist/*
@@ -35,4 +35,4 @@ clean: # Cleanup build artifacts
 # Bundle the policies into a tarball for OCI registry
 build: clean ## Build the policy bundle
 	@mkdir -p dist/
-	@opa build -b policies -o dist/bundle.tar.gz
+	@opa build policies data.json -o dist/bundle.tar.gz

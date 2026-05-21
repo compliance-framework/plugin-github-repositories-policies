@@ -18,6 +18,10 @@ test_violation_when_all_environments_unprotected_no_policy_data if {
 	count(violations) == 2
 }
 
+test_environment_names_loaded_from_bundled_data_document if {
+	policy.environment_names == data.environment_names
+}
+
 test_skip_when_no_environments_and_no_policy_data if {
 	inp := {"environments": []}
 
