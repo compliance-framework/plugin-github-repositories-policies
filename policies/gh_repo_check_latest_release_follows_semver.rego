@@ -87,5 +87,5 @@ tag_is_semver if {
     regex.match(semver_pattern, tag)
 }
 
-title := "Latest release tag follows Semantic Versioning"
+title := sprintf("Does latest release tag follow Semantic Versioning for repository %s",[input.settings.full_name])
 description := "The latest release tag must follow Semantic Versioning (SemVer), such as v1.2.3 or 1.2.3, with optional pre-release and build metadata. Expected shape: input.LatestRelease.tag_name."

@@ -7,7 +7,7 @@ passed := count([x |
 ])
 tolerance := 0.2
 
-title := "Repository has healthy workflow runs"
+title := sprintf("Does repository %s have healthy workflow runs?", [input.settings.full_name])
 description := sprintf("All repositories must have healthy workflow runs. [%d/%d - tolerance %d%%]", [passed, total, tolerance * 100])
 remarks := sprintf("All repositories must have healthy workflow runs. Healthy workflow runs are calculated with a tolerance of %d%%", [tolerance * 100])
 

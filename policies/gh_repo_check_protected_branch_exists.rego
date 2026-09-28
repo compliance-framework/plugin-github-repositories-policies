@@ -43,5 +43,6 @@ violation[{"id": "no_protected_branch"}] if {
     count(input.protected_branches) == 0
 }
 
-title := "Repository has at least one protected branch"
+title := sprintf("Does repository %s have at least one protected branch?", [input.settings.full_name])
+
 description := "All repositories must have at least one protected branch configured."

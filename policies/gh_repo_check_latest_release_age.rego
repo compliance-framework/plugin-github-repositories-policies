@@ -98,5 +98,5 @@ release_too_old if {
     age_ns > max_ns
 }
 
-title := "Latest release is recent"
+title := sprintf("Is latest release for repository %s recent?",[input.settings.full_name])
 description := "The most recent repository release must be no older than the allowed threshold (default 90 days). Expected shape: input.last_release.published_at as an RFC3339 timestamp."

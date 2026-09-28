@@ -1,6 +1,6 @@
 package compliance_framework.has_required_checks
 
-title := "Repository has required status checks"
+title := sprintf("Does repository %s have required status checks?", [input.settings.full_name])
 description := "A repository must have required status checks configured to ensure that all code changes are properly tested and validated before being merged."
 
 skip_reason := "Repository does not have any protected branches, so required status checks cannot be evaluated." if {

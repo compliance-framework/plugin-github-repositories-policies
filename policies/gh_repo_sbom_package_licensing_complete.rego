@@ -61,5 +61,5 @@ violation[{"id": "package_missing_license"}] if {
     pkg_missing_license(pkg)
 }
 
-title := "SBOM packages have concluded licenses"
+title := sprintf("Do SBOM packages have concluded licenses for repository %s?", [input.settings.full_name])
 description := "Every package in the SBOM must include a non-empty licenseConcluded value (not NONE/NOASSERTION)."

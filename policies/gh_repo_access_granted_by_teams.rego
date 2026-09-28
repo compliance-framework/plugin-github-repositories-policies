@@ -7,7 +7,7 @@ raw_collaborators := object.get(input, "collaborators", [])
 repository_teams := [team | raw_repository_teams != null; some team in raw_repository_teams]
 collaborators := [collaborator | raw_collaborators != null; some collaborator in raw_collaborators]
 
-title := "Repository access is granted through teams"
+title := sprintf("Is repository access for %s granted through teams?",[input.settings.full_name])
 description := "Repositories should grant access through GitHub teams and avoid direct user collaborators."
 
 risk_templates := [{

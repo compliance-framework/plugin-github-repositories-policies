@@ -7,7 +7,7 @@ branch_protection_rules := object.get(input, "branch_protection_rules", {})
 effective_branch_rules := object.get(input, "effective_branch_rules", {})
 default_branch := object.get(input, "default_branch", "")
 
-title := "Repository requires commit signing"
+title := sprintf("Does repository %s require commit signing?",[input.settings.full_name])
 description := "Repositories should enforce commit signing on all protected branches and the default branch."
 
 skip_reason := "Repository does not have any protected branches or a default branch, so branch rules cannot be evaluated." if {
