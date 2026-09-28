@@ -4,7 +4,7 @@ import future.keywords.if
 
 min_required_approvals := 1
 
-title := sprintf("Protected branches on %s require pull request approvals", [input.settings.full_name])
+title := sprintf("Do protected branches on %s require pull request approvals?", [input.settings.full_name])
 description := sprintf("Protected branches must require at least %d pull request approval(s) before merging.", [min_required_approvals])
 
 skip_reason := "Repository does not have any protected branches, so pull request approval requirements cannot be evaluated." if {
