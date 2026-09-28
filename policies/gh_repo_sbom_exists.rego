@@ -54,5 +54,5 @@ sbom_has_packages if {
     count(sbom.packages) > 0
 }
 
-title := "Repository SBOM exists"
+title := sprintf("Does SBOM exist for repository %s?", [input.settings.full_name])
 description := "A repository must include an SPDX SBOM with at least one package. Expected shape: input.sbom.sbom.packages[]."

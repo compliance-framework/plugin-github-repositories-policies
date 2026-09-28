@@ -95,5 +95,5 @@ has_document_namespace if {
     ns != ""
 }
 
-title := "Repository SBOM metadata is valid and fresh"
+title := sprintf("Is SBOM metadata is valid and fresh for repository %s?", [input.settings.full_name])
 description := sprintf("SBOM must use SPDX 2.2/2.3, include a document namespace, and be generated within the last %d days.", [max_age_days])

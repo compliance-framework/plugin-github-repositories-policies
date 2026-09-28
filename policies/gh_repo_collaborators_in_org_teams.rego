@@ -20,7 +20,7 @@ org_teams := raw_org_teams if {
   raw_org_teams != null
 }
 
-title := "Direct repository collaborators belong to organization teams"
+title := sprintf("Do direct collaborators belong to organization teams for repository %s",[input.settings.full_name])
 description := "Any direct repository collaborator should also be represented in an organization team for access review and offboarding visibility."
 
 skip_reason := "Collaborator and organization team data is not available, so collaborator membership cannot be evaluated." if {

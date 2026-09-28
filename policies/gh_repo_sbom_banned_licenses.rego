@@ -68,7 +68,7 @@ license_text(pkg) := "" if {
     not is_string(pkg.licenseConcluded)
 }
 
-title := "SBOM contains banned licenses"
+title := sprintf("Does SBOM for repository %s contain banned licenses?", [input.settings.full_name])
 
 # Compose a human-readable list of offending packages for the description.
 banned_entries := [

@@ -50,5 +50,5 @@ release_has_notes if {
     trim_space(body) != ""
 }
 
-title := "Latest repository release has change notes"
+title := sprintf("Does latest release have change notes for repository %s?",[input.settings.full_name])
 description := "The latest repository release must include non-empty release notes."

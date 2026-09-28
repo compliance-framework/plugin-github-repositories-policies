@@ -18,7 +18,7 @@ deployments := raw_deployments if {
   raw_deployments != null
 }
 
-title := "Failed deployments are tracked to resolution"
+title := sprintf("Are failed deployments tracked to resolution for repository %s?", [input.settings.full_name])
 description := "Failed or errored deployments must be followed by a later successful deployment to the same environment, demonstrating that the failure was remediated or rolled back."
 
 skip_reason := "Repository does not have any deployments, so failed deployment tracking cannot be evaluated." if {

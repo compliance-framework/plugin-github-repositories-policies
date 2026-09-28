@@ -65,6 +65,6 @@ violation[{"id": "non_compliant_license"}] if {
     input.settings.license.spdx_id == ""
 }
 
-title = "Repository has a valid Open Source License"
+title = sprintf("Does repository %s have a valid Open Source License?",[input.settings.full_name])
 description = "All repositories must have a valid Open Source License."
 remarks = "Licensing your open source software is essential to clearly communicate the terms under which others can use, modify, and distribute your code. It helps protect your rights as an author, ensures compliance with legal requirements, and fosters trust and collaboration within the open source community. A well-defined license also prevents misuse and clarifies responsibilities for contributors and users."

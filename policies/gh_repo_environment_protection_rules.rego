@@ -9,7 +9,7 @@ environment_names := data.environment_names if {
 	is_array(data.environment_names)
 }
 
-title := "Deployment environments require protection rules"
+title := sprintf("Do deployment environments require protection rules for repository %s", [input.settings.full_name])
 default description := "Specified GitHub environments should require reviewer or wait timer protection before deployment. If no environments are specified in policy data, all environments are checked."
 
 missing_environment_names := [env_name |

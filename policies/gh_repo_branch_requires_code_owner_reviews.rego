@@ -2,7 +2,7 @@ package compliance_framework.branch_requires_code_owner_reviews
 
 import future.keywords.if
 
-title := "Branch protection requires code owner review"
+title := sprintf("Does repository %s require code owner view on protected branches?",[input.settings.full_name])
 description := "Protected branches must enforce CODEOWNERS approvals so domain experts approve changes before merging."
 
 skip_reason := "Repository does not have any protected branches, so branch protection rules cannot be evaluated." if {

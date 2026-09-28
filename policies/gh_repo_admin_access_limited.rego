@@ -21,7 +21,7 @@ collaborators := raw_collaborators if {
   raw_collaborators != null
 }
 
-title := "Repository administrator access is limited"
+title := sprintf("Is repository administrator access for %s limited?",[input.settings.full_name])
 description := sprintf("Repository admin access should be assigned through no more than %d team(s), with no direct admin collaborators.", [max_admin_teams])
 
 skip_reason := "Repository team and collaborator data is not available, so repository access cannot be evaluated." if {

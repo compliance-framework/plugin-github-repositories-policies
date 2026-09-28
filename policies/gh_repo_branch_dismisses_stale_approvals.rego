@@ -2,7 +2,7 @@ package compliance_framework.branch_dismisses_stale_approvals
 
 import future.keywords.if
 
-title := "Branch protection dismisses stale approvals"
+title := sprintf("Does repository %s enable stale review on protected branches?",[input.settings.full_name])
 description := "Protected branches must be configured to dismiss stale pull request approvals when new commits are pushed."
 
 skip_reason := "Repository does not have any protected branches, so branch protection rules cannot be evaluated." if {

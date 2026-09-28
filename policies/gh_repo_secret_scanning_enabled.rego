@@ -55,6 +55,6 @@ violation[{"id": "secret_scanning_disabled"}] if {
 	not input.settings.security_and_analysis.secret_scanning.status == "enabled"
 }
 
-title := "Repository has secret scanning enabled"
+title := sprintf("Does repository %s have secret scanning enabled?", [input.settings.full_name])
 description := "All repositories must have secret scanning enabled."
 remarks := "Enabling secret scanning helps to identify and prevent the accidental exposure of sensitive information, such as API keys and passwords, in your codebase. It is an essential security measure to protect your application and its users."
