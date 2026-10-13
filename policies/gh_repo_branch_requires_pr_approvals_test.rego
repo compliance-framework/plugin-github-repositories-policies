@@ -5,13 +5,7 @@ import data.compliance_framework.branch_requires_pr_approvals as policy
 test_violation_when_required_approvals_zero if {
 	inp := {
 		"protected_branches": ["main"],
-		"branch_protection_rules": {
-			"main": {
-				"required_pull_request_reviews": {
-					"required_approving_review_count": 0,
-				},
-			},
-		},
+		"branch_protection_rules": {"main": {"required_pull_request_reviews": {"required_approving_review_count": 0}}},
 	}
 
 	violations := policy.violation with input as inp
@@ -21,41 +15,27 @@ test_violation_when_required_approvals_zero if {
 test_violation_when_required_approvals_missing if {
 	inp := {
 		"protected_branches": ["main"],
-		"branch_protection_rules": {
-			"main": {
-				"required_pull_request_reviews": {
-				},
-			},
-		},
+		"branch_protection_rules": {"main": {"required_pull_request_reviews": {}}},
 	}
 
 	violations := policy.violation with input as inp
 	count(violations) == 1
 }
+
 test_violation_when_branch_protection_not_set if {
 	inp := {
 		"protected_branches": ["main"],
-		"branch_protection_rules": {
-			"not-main": {
-				"required_pull_request_reviews": {
-				},
-			},
-		},
+		"branch_protection_rules": {"not-main": {"required_pull_request_reviews": {}}},
 	}
 
 	violations := policy.violation with input as inp
 	count(violations) == 1
 }
+
 test_pass_when_required_approvals_met if {
 	inp := {
 		"protected_branches": ["main"],
-		"branch_protection_rules": {
-			"main": {
-				"required_pull_request_reviews": {
-					"required_approving_review_count": 2,
-				},
-			},
-		},
+		"branch_protection_rules": {"main": {"required_pull_request_reviews": {"required_approving_review_count": 2}}},
 	}
 
 	violations := policy.violation with input as inp
@@ -66,11 +46,7 @@ test_pass_when_required_approvals_met_in_effective_rules if {
 	inp := {
 		"protected_branches": ["main"],
 		"branch_protection_rules": {},
-		"effective_branch_rules": {
-			"main": {
-				"required_approving_review_count": 1,
-			},
-		},
+		"effective_branch_rules": {"main": {"required_approving_review_count": 1}},
 	}
 
 	violations := policy.violation with input as inp
@@ -81,11 +57,7 @@ test_violation_when_required_approvals_zero_in_effective_rules if {
 	inp := {
 		"protected_branches": ["main"],
 		"branch_protection_rules": {},
-		"effective_branch_rules": {
-			"main": {
-				"required_approving_review_count": 0,
-			},
-		},
+		"effective_branch_rules": {"main": {"required_approving_review_count": 0}},
 	}
 
 	violations := policy.violation with input as inp
