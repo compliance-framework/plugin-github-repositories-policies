@@ -3,92 +3,92 @@ package compliance_framework.workflow_health_test
 import data.compliance_framework.workflow_health as policy
 
 test_no_runs_ok if {
-  inp := {"workflow_runs": []}
+	inp := {"workflow_runs": []}
 
-  v := count(policy.violation) with input as inp
-  v == 0
+	v := count(policy.violation) with input as inp
+	v == 0
 }
 
 test_skip_when_no_workflow_runs if {
-    inp := {"workflow_runs": []}
-    policy.skip_reason != "" with input as inp
+	inp := {"workflow_runs": []}
+	policy.skip_reason != "" with input as inp
 }
 
 test_within_tolerance_ok if {
-  inp := {"workflow_runs": [
-    {"conclusion": "success"},
-    {"conclusion": "success"},
-    {"conclusion": "success"},
-    {"conclusion": "success"},
-    {"conclusion": "success"},
-    {"conclusion": "success"},
-    {"conclusion": "success"},
-    {"conclusion": "success"},
-    {"conclusion": "failure"},
-    {"conclusion": "cancelled"}
-  ]}
+	inp := {"workflow_runs": [
+		{"conclusion": "success"},
+		{"conclusion": "success"},
+		{"conclusion": "success"},
+		{"conclusion": "success"},
+		{"conclusion": "success"},
+		{"conclusion": "success"},
+		{"conclusion": "success"},
+		{"conclusion": "success"},
+		{"conclusion": "failure"},
+		{"conclusion": "cancelled"},
+	]}
 
-  # 8/10 pass; 20% tolerance -> exactly at threshold => no violation
-  v := count(policy.violation) with input as inp
-  v == 0
+	# 8/10 pass; 20% tolerance -> exactly at threshold => no violation
+	v := count(policy.violation) with input as inp
+	v == 0
 }
 
 test_exceeds_tolerance_violation if {
-  inp := {"workflow_runs": [
-    {"conclusion": "success"},
-    {"conclusion": "success"},
-    {"conclusion": "success"},
-    {"conclusion": "success"},
-    {"conclusion": "success"},
-    {"conclusion": "success"},
-    {"conclusion": "failure"},
-    {"conclusion": "failure"},
-    {"conclusion": "failure"},
-    {"conclusion": "cancelled"}
-  ]}
+	inp := {"workflow_runs": [
+		{"conclusion": "success"},
+		{"conclusion": "success"},
+		{"conclusion": "success"},
+		{"conclusion": "success"},
+		{"conclusion": "success"},
+		{"conclusion": "success"},
+		{"conclusion": "failure"},
+		{"conclusion": "failure"},
+		{"conclusion": "failure"},
+		{"conclusion": "cancelled"},
+	]}
 
-  # 6/10 pass; 20% tolerance -> abs(10-6)=4 > 2 => violation
-  v := count(policy.violation) with input as inp
-  v == 1
+	# 6/10 pass; 20% tolerance -> abs(10-6)=4 > 2 => violation
+	v := count(policy.violation) with input as inp
+	v == 1
 }
 
 test_small_set_within_tolerance_ok if {
-  inp := {"workflow_runs": [
-    {"conclusion": "success"},
-    {"conclusion": "success"},
-    {"conclusion": "success"},
-    {"conclusion": "success"},
-    {"conclusion": "failure"}
-  ]}
+	inp := {"workflow_runs": [
+		{"conclusion": "success"},
+		{"conclusion": "success"},
+		{"conclusion": "success"},
+		{"conclusion": "success"},
+		{"conclusion": "failure"},
+	]}
 
-  # 4/5 pass; 20% of 5 is 1; abs(5-4)=1 -> not greater => ok
-  v := count(policy.violation) with input as inp
-  v == 0
+	# 4/5 pass; 20% of 5 is 1; abs(5-4)=1 -> not greater => ok
+	v := count(policy.violation) with input as inp
+	v == 0
 }
 
 test_small_set_exceeds_tolerance_violation if {
-  inp := {"workflow_runs": [
-    {"conclusion": "success"},
-    {"conclusion": "success"},
-    {"conclusion": "success"},
-    {"conclusion": "failure"},
-    {"conclusion": "failure"}
-  ]}
+	inp := {"workflow_runs": [
+		{"conclusion": "success"},
+		{"conclusion": "success"},
+		{"conclusion": "success"},
+		{"conclusion": "failure"},
+		{"conclusion": "failure"},
+	]}
 
-  # 3/5 pass; abs=2 > 1 -> violation
-  v := count(policy.violation) with input as inp
-  v == 1
+	# 3/5 pass; abs=2 > 1 -> violation
+	v := count(policy.violation) with input as inp
+	v == 1
 }
 
 test_description_includes_counts if {
-  inp := {"workflow_runs": [
-    {"conclusion": "success"},
-    {"conclusion": "failure"},
-    {"conclusion": "success"},
-    {"conclusion": "cancelled"}
-  ]}
+	inp := {"workflow_runs": [
+		{"conclusion": "success"},
+		{"conclusion": "failure"},
+		{"conclusion": "success"},
+		{"conclusion": "cancelled"},
+	]}
 
-  expected := "All repositories must have healthy workflow runs. [2/4 - tolerance 20%]"
-  desc := policy.description with input as inp
-  contains(desc, "[2/4 - tolerance 20%]")
+	expected := "All repositories must have healthy workflow runs. [2/4 - tolerance 20%]"
+	desc := policy.description with input as inp
+	contains(desc, "[2/4 - tolerance 20%]")
 }

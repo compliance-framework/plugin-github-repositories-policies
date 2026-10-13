@@ -3,6 +3,7 @@ package compliance_framework.repository_environment_protection
 import future.keywords.if
 
 environments := object.get(input, "environments", [])
+
 default environment_names := []
 
 environment_names := data.environment_names if {
@@ -10,6 +11,7 @@ environment_names := data.environment_names if {
 }
 
 title := "Deployment environments require protection rules"
+
 default description := "Specified GitHub environments should require reviewer or wait timer protection before deployment. If no environments are specified in policy data, all environments are checked."
 
 missing_environment_names := [env_name |

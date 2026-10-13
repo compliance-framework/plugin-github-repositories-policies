@@ -22,7 +22,6 @@ test_old_pr_violation if {
 	v == 1
 }
 
-
 test_non_bot_pr_ok if {
 	now := time.parse_rfc3339_ns("2025-06-10T09:00:00Z")
 	inp := {"pull_requests": [{
