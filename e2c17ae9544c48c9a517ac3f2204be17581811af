@@ -1,0 +1,3 @@
+lisa-addressed:
+Merged main (v0.7.0 + #11 opa fmt + #12 shared policy CI) into imiell-reponame with a real merge commit so tags v0.7.1-v0.7.3 stay ancestors. Conflicts (6 files: latest_release_age, latest_release_notes, oss_license, environment_protection_rules, sbom_metadata, workflows_configured) resolved by taking main's formatted file and re-applying PR #10's sprintf title (with := as main uses). Follow-up style commit runs opa fmt on the reponame titles. No behaviour change beyond #10.
+Task: W3-S2-T02 prep (local-dev/docs/release-automation/workstream-3-plugins-in-train.md)
