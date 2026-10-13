@@ -1,0 +1,5 @@
+lisa-design:
+- Layer 2 of the stack, based on ra/w2-s4-t02-opa-fmt (#11). ci.yml is copied as is from mock-plugin-policies-1 (v1.5.1 pin); push.yaml and test.yml removed; release.yml and build-and-upload.yml untouched.
+- Only equivalent rewrites: object.get(x,k,false) conditions became != false (not == true, which would change truthy non-boolean values); equals-over-count fixed only on policy-built arrays, never on input values; superfluous-object-get left where the compared value can be "".
+- unresolved-reference for data.json keys uses trailing line-scoped ignores, not a repo .regal/config.yaml (CI would then skip the shared config).
+- Behaviour proof: opa eval data.compliance_framework identical to main on 28170 evaluations; all 134 test_* keys true on both sides; rewritten tests fail under mutation.
