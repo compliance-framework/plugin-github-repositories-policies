@@ -3,3 +3,6 @@ lisa-design:
 - Only equivalent rewrites: object.get(x,k,false) conditions became != false (not == true, which would change truthy non-boolean values); equals-over-count fixed only on policy-built arrays, never on input values; superfluous-object-get left where the compared value can be "".
 - unresolved-reference for data.json keys uses trailing line-scoped ignores, not a repo .regal/config.yaml (CI would then skip the shared config).
 - Behaviour proof: opa eval data.compliance_framework identical to main on 28170 evaluations; all 134 test_* keys true on both sides; rewritten tests fail under mutation.
+
+lisa-selfreview:
+- Pass 1 (rules core + rego-policy): no fix findings in the diff. Question for reviewers: should the nine object.get(...) != false conditions require == true (behaviour change, not made). Size: #11 exceeds 1000 lines as pure opa fmt output (spec-prescribed layer); needs a human size-exception decision.
