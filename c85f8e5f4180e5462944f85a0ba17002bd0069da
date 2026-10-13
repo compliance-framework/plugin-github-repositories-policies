@@ -1,0 +1,2 @@
+lisa-design:
+Seed .release-please-manifest.json at 0.7.3 with no bootstrap-sha (user decision 2026-10-13). v0.7.1-v0.7.3 were tagged on branch imiell-reponame (PR #10), not main. Verified: v0.7.3 is an ancestor of origin/imiell-reponame (head e2c17ae) and imiell-reponame is behind main by 0. PR #10 must merge with a merge commit before this PR, making v0.7.3 an ancestor of main. Workflow files copied from plugin-file-attestation-policies#4 (old files byte-identical); only the seed differs.
