@@ -1,0 +1,3 @@
+lisa-design:
+- Layer 1 of a 2-PR stack (W2-S4-T02 size rule): pure opa fmt -w policies with OPA 1.14.1, no hand edits. Layer 2 (ra/w2-s4-t02-shared-ci) holds ci.yml and every other Rego fix.
+- Behaviour proof: per-file AST equal to main except the three = to := rule heads in gh_repo_check_oss_license.rego; opa eval data.compliance_framework identical on 28170 evaluations (2817 inputs x 5 data.json variants x 2 frozen clocks).
