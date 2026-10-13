@@ -88,7 +88,6 @@ test_description_includes_counts if {
 		{"conclusion": "cancelled"},
 	]}
 
-	expected := "All repositories must have healthy workflow runs. [2/4 - tolerance 20%]"
 	desc := policy.description with input as inp
 	contains(desc, "[2/4 - tolerance 20%]")
 }
