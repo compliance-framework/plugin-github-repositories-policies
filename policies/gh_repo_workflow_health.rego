@@ -2,7 +2,7 @@ package compliance_framework.workflow_health
 
 total := count(input.workflow_runs)
 passed := count([x |
-	x := input.workflow_runs[_]
+	some x in input.workflow_runs
 	x.conclusion == "success"
 ])
 

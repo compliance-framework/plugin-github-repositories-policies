@@ -35,26 +35,25 @@ risk_templates := [{
 }]
 
 branches_to_check := ({branch |
-	branch := protected_branches[_]
+	some branch in protected_branches
 } | {branch |
-	branch := object.keys(effective_branch_rules)[_]
-}) | {branch |
-	branch := default_branch
-	branch != ""
+	some branch in object.keys(effective_branch_rules)
+}) | {default_branch |
+	default_branch != ""
 }
 
 violation[{"id": "commit_signing_not_required", "remarks": sprintf("Branch %q does not require signed commits.", [branch])}] if {
-	branch := branches_to_check[_]
+	some branch in branches_to_check
 	not branch_requires_signatures(branch)
 }
 
 branch_requires_signatures(branch) if {
 	rules := object.get(effective_branch_rules, branch, {})
-	object.get(rules, "required_signatures", false)
+	object.get(rules, "required_signatures", false) != false
 }
 
 branch_requires_signatures(branch) if {
 	protection := object.get(branch_protection_rules, branch, {})
 	signatures := object.get(protection, "required_signatures", {})
-	object.get(signatures, "enabled", false)
+	object.get(signatures, "enabled", false) != false
 }

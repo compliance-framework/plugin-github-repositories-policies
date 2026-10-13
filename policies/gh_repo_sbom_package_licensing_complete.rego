@@ -55,8 +55,7 @@ violation[{"id": "sbom_absent"}] if {
 }
 
 violation[{"id": "package_missing_license"}] if {
-	some i
-	pkg := sbom.packages[i]
+	some pkg in sbom.packages
 	pkg_missing_license(pkg)
 }
 

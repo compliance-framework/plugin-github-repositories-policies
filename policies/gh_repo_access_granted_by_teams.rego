@@ -37,11 +37,11 @@ skip_reason := "Repository team and collaborator data is not available, so repos
 }
 
 violation[{"id": "no_repository_teams", "remarks": "Repository has no teams with explicit access."}] if {
-	count(repository_teams) == 0
+	repository_teams == []
 }
 
 violation[{"id": "direct_repository_collaborator", "remarks": sprintf("Repository has direct collaborator %q.", [login])}] if {
-	collaborator := collaborators[_]
+	some collaborator in collaborators
 	login := object.get(collaborator, "login", "")
 	login != ""
 }

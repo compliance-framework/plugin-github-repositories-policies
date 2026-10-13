@@ -43,7 +43,7 @@ risk_templates := [{
 }]
 
 violation[{"id": "stale_approvals_not_dismissed", "remarks": sprintf("Branch protection for %q does not dismiss stale approvals after new commits.", [branch])}] if {
-	branch := input.protected_branches[_]
+	some branch in input.protected_branches
 	not branch_dismisses_stale_reviews(branch)
 }
 
@@ -54,7 +54,7 @@ branch_dismisses_stale_reviews(branch) if {
 
 branch_dismisses_stale_reviews(branch) if {
 	rules := object.get(input.effective_branch_rules, branch, {})
-	object.get(rules, "dismiss_stale_reviews_on_push", false)
+	object.get(rules, "dismiss_stale_reviews_on_push", false) != false
 }
 
 branch_protection_settings(branch) := settings if {
@@ -63,5 +63,5 @@ branch_protection_settings(branch) := settings if {
 }
 
 require_dismiss_stale_reviews(settings) if {
-	object.get(settings, "dismiss_stale_reviews", false)
+	object.get(settings, "dismiss_stale_reviews", false) != false
 }
