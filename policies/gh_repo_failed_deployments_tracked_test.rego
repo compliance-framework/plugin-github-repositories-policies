@@ -55,7 +55,6 @@ test_violation_when_later_success_is_different_environment if {
 	count(violations) == 1
 }
 
-
 test_skip_when_no_deployments if {
 	inp := {
 		"failed_deployments": [],

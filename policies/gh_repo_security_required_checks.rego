@@ -38,7 +38,7 @@ violation[{"id": "security_required_check_missing", "remarks": "Repository has n
 }
 
 repo_has_security_required_check if {
-	context := required_check_contexts[_]
+	some context in required_check_contexts
 	security_check_name(context)
 }
 
@@ -46,7 +46,7 @@ required_check_contexts := {context |
 	is_object(required_status_checks)
 	checks := object.get(required_status_checks, "checks", [])
 	is_array(checks)
-	check := checks[_]
+	some check in checks
 	is_object(check)
 	context := object.get(check, "context", "")
 	context != ""
@@ -54,20 +54,20 @@ required_check_contexts := {context |
 	is_object(required_status_checks)
 	contexts := object.get(required_status_checks, "contexts", [])
 	is_array(contexts)
-	context := contexts[_]
+	some context in contexts
 	is_string(context)
 	context != ""
 }
 
 any_branch_has_security_rule if {
-	branch := object.keys(effective_branch_rules)[_]
+	some branch in object.keys(effective_branch_rules)
 	rules := object.get(effective_branch_rules, branch, {})
-	tool := object.get(rules, "code_scanning_tools", [])[_]
+	some tool in object.get(rules, "code_scanning_tools", [])
 	tool != ""
 }
 
 security_check_name(name) if {
 	lower_name := lower(name)
-	keyword := security_keywords[_]
+	some keyword in security_keywords
 	contains(lower_name, keyword)
 }

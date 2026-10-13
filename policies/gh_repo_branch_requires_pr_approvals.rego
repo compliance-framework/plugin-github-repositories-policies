@@ -12,47 +12,47 @@ skip_reason := "Repository does not have any protected branches, so pull request
 }
 
 risk_templates := [{
-  "name": "Insufficient peer review before merge",
-  "title": "Unreviewed Code Merged into Protected Branches",
-  "statement": "Without mandatory peer review approvals, defective, malicious, or non-compliant code can be merged directly into protected branches. This increases the risk of introducing vulnerabilities, business logic errors, or unauthorized changes that bypass all human oversight.",
-  "likelihood_hint": "moderate",
-  "impact_hint": "high",
-  "violation_ids": ["insufficient_pr_approvals"],
-  "threat_refs": [
-    {
-      "system": "https://cwe.mitre.org",
-      "external_id": "CWE-284",
-      "title": "Improper Access Control",
-      "url": "https://cwe.mitre.org/data/definitions/284.html"
-    },
-    {
-      "system": "https://cwe.mitre.org",
-      "external_id": "CWE-693",
-      "title": "Protection Mechanism Failure",
-      "url": "https://cwe.mitre.org/data/definitions/693.html"
-    },
-    {
-      "system": "https://cwe.mitre.org",
-      "external_id": "CWE-1188",
-      "title": "Insecure Default Initialization of Resource",
-      "url": "https://cwe.mitre.org/data/definitions/1188.html"
-    }
-  ],
-  "remediation": {
-    "title": "Enforce minimum PR approval count on protected branches",
-    "description": "Configure branch protection to require at least one (preferably two) approving reviews before any pull request can be merged into protected branches.",
-    "tasks": [
-      { "title": "Set 'Required approving reviews' to at least 1 in branch protection settings" },
-      { "title": "Apply to all protected branches (main, master, release/*)" },
-      { "title": "Consider increasing to 2 approvals for critical or security-sensitive codebases" },
-      { "title": "Enable 'Dismiss stale reviews when new commits are pushed' alongside this setting" },
-      { "title": "Restrict who can dismiss reviews to prevent bypass by the PR author" }
-    ]
-  }
+	"name": "Insufficient peer review before merge",
+	"title": "Unreviewed Code Merged into Protected Branches",
+	"statement": "Without mandatory peer review approvals, defective, malicious, or non-compliant code can be merged directly into protected branches. This increases the risk of introducing vulnerabilities, business logic errors, or unauthorized changes that bypass all human oversight.",
+	"likelihood_hint": "moderate",
+	"impact_hint": "high",
+	"violation_ids": ["insufficient_pr_approvals"],
+	"threat_refs": [
+		{
+			"system": "https://cwe.mitre.org",
+			"external_id": "CWE-284",
+			"title": "Improper Access Control",
+			"url": "https://cwe.mitre.org/data/definitions/284.html",
+		},
+		{
+			"system": "https://cwe.mitre.org",
+			"external_id": "CWE-693",
+			"title": "Protection Mechanism Failure",
+			"url": "https://cwe.mitre.org/data/definitions/693.html",
+		},
+		{
+			"system": "https://cwe.mitre.org",
+			"external_id": "CWE-1188",
+			"title": "Insecure Default Initialization of Resource",
+			"url": "https://cwe.mitre.org/data/definitions/1188.html",
+		},
+	],
+	"remediation": {
+		"title": "Enforce minimum PR approval count on protected branches",
+		"description": "Configure branch protection to require at least one (preferably two) approving reviews before any pull request can be merged into protected branches.",
+		"tasks": [
+			{"title": "Set 'Required approving reviews' to at least 1 in branch protection settings"},
+			{"title": "Apply to all protected branches (main, master, release/*)"},
+			{"title": "Consider increasing to 2 approvals for critical or security-sensitive codebases"},
+			{"title": "Enable 'Dismiss stale reviews when new commits are pushed' alongside this setting"},
+			{"title": "Restrict who can dismiss reviews to prevent bypass by the PR author"},
+		],
+	},
 }]
 
 violation[{"id": "insufficient_pr_approvals", "remarks": sprintf("Branch protection for %q requires fewer than %d approvals before merging.", [branch, min_required_approvals])}] if {
-	branch := input.protected_branches[_]
+	some branch in input.protected_branches
 	not branch_meets_approval_requirement(branch)
 }
 
