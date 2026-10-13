@@ -6,7 +6,7 @@ required_status_checks := object.get(input, "required_status_checks", {})
 effective_branch_rules := object.get(input, "effective_branch_rules", {})
 security_keywords := {"sast", "dast", "codeql", "code scanning", "security", "dependency", "dependabot", "vulnerability", "container scan", "trivy", "grype", "semgrep", "sbom", "secret"}
 
-title := "Repository requires security status checks"
+title := sprintf("Does repository %s have required security status checks?", [input.settings.full_name])
 description := "Repositories should require at least one security-focused status check or code scanning ruleset such as SAST, code scanning, dependency scanning, container scanning, SBOM, or secret scanning."
 
 skip_reason := "Repository does not have any protected branches or effective rules, so required checks cannot be evaluated." if {

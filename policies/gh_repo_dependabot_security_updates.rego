@@ -54,6 +54,6 @@ violation[{"id": "dependabot_security_updates_disabled"}] if {
 	not input.settings.security_and_analysis.dependabot_security_updates.status == "enabled"
 }
 
-title := "Repository has dependabot security updates enabled"
+title := sprintf("Does repository %s have dependabot security updates enabled?", [input.settings.full_name])
 description := "All repositories must have dependabot security updates enabled."
 remarks := "Enabling dependabot security updates helps to automatically keep your dependencies up to date with the latest security patches. This is an essential security measure to protect your application from vulnerabilities that could be exploited by attackers."

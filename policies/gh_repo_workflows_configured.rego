@@ -72,7 +72,7 @@ workflow_filename(workflow) := filename if {
 	filename := parts[count(parts) - 1]
 }
 
-title := "Repository has workflows configured"
+title := sprintf("Does repository %s have workflows configured?", [input.settings.full_name])
 
 default workflow_names := []
 

@@ -11,7 +11,7 @@ environment_names := data.environment_names if { # regal ignore:unresolved-refer
 	is_array(data.environment_names) # regal ignore:unresolved-reference
 }
 
-title := "Deployment environments require protection rules"
+title := sprintf("Do deployment environments require protection rules for repository %s", [input.settings.full_name])
 
 missing_environment_names := [env_name |
 	environment_names != []
