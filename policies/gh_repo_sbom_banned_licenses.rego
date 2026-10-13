@@ -48,10 +48,9 @@ violation[{"id": "sbom_absent"}] if {
 }
 
 violation[{"id": "banned_license_present"}] if {
-	some i
-	pkg := sbom.packages[i]
+	some pkg in sbom.packages
 	lic := license_text(pkg)
-	bl := banned_licenses[_]
+	some bl in banned_licenses
 	lic != ""
 	contains(lic, lower(bl))
 }
@@ -70,10 +69,10 @@ title := "SBOM contains banned licenses"
 # Compose a human-readable list of offending packages for the description.
 banned_entries := [
 sprintf("%s (%s)", [pkg_name(pkg), license_text_raw(pkg)]) |
-	pkg := sbom.packages[_]
+	some pkg in sbom.packages
 	lic_raw := license_text_raw(pkg)
 	lic := lower(lic_raw)
-	bl := banned_licenses[_]
+	some bl in banned_licenses
 	lic_raw != ""
 	contains(lic, lower(bl))
 ]
@@ -83,11 +82,11 @@ description := sprintf(
 	"Packages in the SBOM must not include non-commercial or proprietary licenses. Offenders: %s",
 	[concat(", ", banned_entries)],
 ) if {
-	count(banned_entries) > 0
+	banned_entries != []
 }
 
 # Fallback description when no offending packages are detected in input context.
-description := "Packages in the SBOM must not include non-commercial or proprietary licenses (e.g., BUSL, Elastic, SSPL, PolyForm Noncommercial, CC-BY-NC variants, or proprietary markers)." if count(banned_entries) == 0
+description := "Packages in the SBOM must not include non-commercial or proprietary licenses (e.g., BUSL, Elastic, SSPL, PolyForm Noncommercial, CC-BY-NC variants, or proprietary markers)." if banned_entries == []
 
 license_text_raw(pkg) := s if {
 	is_string(pkg.licenseConcluded)

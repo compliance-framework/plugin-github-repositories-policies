@@ -50,14 +50,14 @@ risk_templates := [{
 }]
 
 violation[{"id": "collaborator_not_in_org_team", "remarks": sprintf("Direct collaborator %q is not a member of any collected organization team.", [login])}] if {
-	collaborator := collaborators[_]
+	some collaborator in collaborators
 	login := object.get(collaborator, "login", "")
 	login != ""
 	not collaborator_in_org_team(login)
 }
 
 collaborator_in_org_team(login) if {
-	team := org_teams[_]
+	some team in org_teams
 	members := object.get(team, "members", [])
-	members[_] == login
+	login in members
 }

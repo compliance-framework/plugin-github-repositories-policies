@@ -51,12 +51,12 @@ risk_templates := [{
 }]
 
 admin_teams := [team |
-	team := repository_teams[_]
+	some team in repository_teams
 	is_admin(team)
 ]
 
 violation[{"id": "direct_admin_collaborator", "remarks": sprintf("Direct collaborator %q has repository admin access.", [login])}] if {
-	collaborator := collaborators[_]
+	some collaborator in collaborators
 	is_admin(collaborator)
 	login := object.get(collaborator, "login", "")
 	login != ""
@@ -76,5 +76,5 @@ is_admin(principal) if {
 
 is_admin(principal) if {
 	permissions := object.get(principal, "permissions", {})
-	object.get(permissions, "admin", false)
+	object.get(permissions, "admin", false) != false
 }

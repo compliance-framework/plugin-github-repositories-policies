@@ -52,7 +52,7 @@ risk_templates := [{
 }]
 
 violation[{"id": "insufficient_pr_approvals", "remarks": sprintf("Branch protection for %q requires fewer than %d approvals before merging.", [branch, min_required_approvals])}] if {
-	branch := input.protected_branches[_]
+	some branch in input.protected_branches
 	not branch_meets_approval_requirement(branch)
 }
 

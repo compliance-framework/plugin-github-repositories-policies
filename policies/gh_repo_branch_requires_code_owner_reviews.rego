@@ -77,12 +77,12 @@ risk_templates := [
 ]
 
 violation[{"id": "codeowners_review_not_required", "remarks": sprintf("Branch protection for %q does not require CODEOWNERS review approval.", [branch])}] if {
-	branch := input.protected_branches[_]
+	some branch in input.protected_branches
 	not branch_requires_code_owner_reviews(branch)
 }
 
 violation[{"id": "codeowners_file_missing_or_empty", "remarks": sprintf("Branch protection for %q requires CODEOWNERS review but no CODEOWNERS file exists or is empty.", [branch])}] if {
-	branch := input.protected_branches[_]
+	some branch in input.protected_branches
 	branch_requires_code_owner_reviews(branch)
 	not has_valid_codeowners_file
 }
@@ -94,7 +94,7 @@ branch_requires_code_owner_reviews(branch) if {
 
 branch_requires_code_owner_reviews(branch) if {
 	rules := object.get(input.effective_branch_rules, branch, {})
-	object.get(rules, "require_code_owner_review", false)
+	object.get(rules, "require_code_owner_review", false) != false
 }
 
 branch_protection_settings(branch) := settings if {
@@ -103,7 +103,7 @@ branch_protection_settings(branch) := settings if {
 }
 
 require_code_owner_reviews(settings) if {
-	object.get(settings, "require_code_owner_reviews", false)
+	object.get(settings, "require_code_owner_reviews", false) != false
 }
 
 has_valid_codeowners_file if {

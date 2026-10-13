@@ -58,7 +58,7 @@ violation[{"id": "no_workflows_configured"}] if {
 
 violation[{"id": "required_workflows_missing", "remarks": sprintf("Missing required workflows: %s", [concat(", ", missing_workflow_names)])}] if {
 	count(input.workflows) > 0
-	count(missing_workflow_names) > 0
+	missing_workflow_names != []
 }
 
 workflow_present(name) if {
@@ -76,8 +76,9 @@ title := "Repository has workflows configured"
 
 default workflow_names := []
 
-workflow_names := data.workflow_names if {
-	is_array(data.workflow_names)
+# data.workflow_names comes from policies/data.json, which Regal doesn't read.
+workflow_names := data.workflow_names if { # regal ignore:unresolved-reference
+	is_array(data.workflow_names) # regal ignore:unresolved-reference
 }
 
 missing_workflow_names := [workflow_name |
@@ -93,19 +94,19 @@ description := msg if {
 
 description := msg if {
 	count(input.workflows) > 0
-	count(missing_workflow_names) > 0
+	missing_workflow_names != []
 	msg := sprintf("Missing required workflows: %s", [concat(", ", missing_workflow_names)])
 }
 
 description := msg if {
 	count(input.workflows) > 0
-	count(workflow_names) > 0
-	count(missing_workflow_names) == 0
+	workflow_names != []
+	missing_workflow_names == []
 	msg := sprintf("All required workflows are configured: %s", [concat(", ", workflow_names)])
 }
 
 description := "All repositories must have workflows configured." if {
 	count(input.workflows) > 0
-	count(workflow_names) == 0
-	count(missing_workflow_names) == 0
+	workflow_names == []
+	missing_workflow_names == []
 }

@@ -44,14 +44,14 @@ risk_templates := [{
 }]
 
 violation[{"id": "failed_deployment_unresolved", "remarks": sprintf("Deployment %v failed and has no later successful deployment to the same environment.", [deployment_id])}] if {
-	item := failed_deployments[_]
+	some item in failed_deployments
 	deployment := object.get(item, "deployment", {})
 	deployment_id := object.get(deployment, "id", "unknown")
 	not resolved_by_later_success(item)
 }
 
 resolved_by_later_success(failed) if {
-	candidate := deployments[_]
+	some candidate in deployments
 	same_environment(failed, candidate)
 	deployment_succeeded(candidate)
 	deployment_after(failed, candidate)
@@ -62,12 +62,12 @@ same_environment(left, right) if {
 	right_deployment := object.get(right, "deployment", {})
 	environment := object.get(left_deployment, "environment", "")
 	environment != ""
-	environment == object.get(right_deployment, "environment", "")
+	environment == right_deployment.environment
 }
 
 deployment_succeeded(item) if {
-	status := object.get(item, "statuses", [])[_]
-	object.get(status, "state", "") == "success"
+	some status in object.get(item, "statuses", [])
+	status.state == "success"
 }
 
 deployment_after(failed, candidate) if {
